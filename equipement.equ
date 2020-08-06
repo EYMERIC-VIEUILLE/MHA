@@ -1,0 +1,74 @@
+addequip 99 0 0 -8 0 0 0 0 0 8 0 0 0 80 0 180 1 Armure d'Anneaux
+addequip 98 0 0 -3 0 0 0 0 0 5 0 0 0 50 0 50 1 Armure de bois
+addequip 97 0 0 0 0 0 0 0 0 2 0 0 0 10 0 30 1 Armure de Cuir
+addequip 96 0 0 -2 0 0 0 0 0 4 0 0 0 40 0 60 1 Armure de peaux
+addequip 95 0 0 -6 0 0 0 0 0 12 0 0 0 120 0 150 1 Armure de pierre
+addequip 94 0 0 -8 0 0 0 0 0 10 0 0 0 100 0 100 1 Armure de Plates
+addequip 93 5 0 2 0 0 0 0 0 0 0 0 0 5 0 0 1 Bottes
+addequip 92 1 1 -1 1 0 0 0 0 4 0 0 0 35 0 0 1 Bouclier à Pointes
+addequip 91 3 -3 0 5 0 0 0 0 0 0 0 0 15 0 0 1 Boulet et chaîne
+addequip 90 9 -4 2 0 0 0 0 0 2 0 0 0 8 0 0 1 Bâtons de Parade
+addequip 89 2 0 1 0 0 0 0 -1 0 0 0 0 3 10 0 1 Cagoule
+addequip 88 2 0 0 0 0 0 0 0 1 0 0 0 5 0 10 1 Casque en cuir
+addequip 87 2 0 0 0 0 0 0 -1 2 0 0 0 10 0 10 1 Casque en métal
+addequip 86 2 0 -1 1 0 3 0 -1 0 0 0 0 10 0 10 1 Casque à cornes (Ancien)
+addequip 86 2 0 -1 1 0 0 0 -1 3 0 0 0 10 0 10 1 Casque à cornes (Nouveau)
+addequip 85 2 1 0 1 0 0 0 -1 3 0 0 0 13 0 0 1 Casque à Pointes
+addequip 84 9 -2 1 4 0 0 0 0 0 0 0 0 35 0 0 1 Chaîne Cloutée
+addequip 83 4 0 0 1 5 0 0 0 0 0 0 0 1 0 0 1 Collier de dents
+addequip 82 4 0 0 0 0 0 0 0 0 0 0 0 3 10 10 1 Collier de pierre
+addequip 81 4 0 -1 1 0 0 0 0 1 0 0 0 3 0 0 1 Collier à Pointes
+addequip 80 0 0 -3 0 0 0 0 0 7 0 0 0 70 0 60 1 Cotte de Mailles
+addequip 79 3 2 0 2 0 -2 0 0 0 0 0 0 5 -16 -6 1 Coutelas d'Obsidienne
+addequip 78 3 0 0 1 0 0 0 0 0 0 0 0 4 0 0 1 Coutelas en os
+addequip 77 3 -2 0 3 0 0 0 0 0 0 0 0 13 0 0 1 Crochet
+addequip 76 0 0 -1 0 0 0 0 0 3 0 0 0 18 0 40 1 Cuir Bouilli
+addequip 75 0 0 -3 0 0 0 0 0 5 0 0 0 68 30 30 1 Cuirasse d'Ossements
+addequip 74 0 0 -3 0 0 0 0 0 6 0 0 0 60 0 70 1 Cuirasse d'écailles
+addequip 73 0 0 1 0 0 0 0 0 0 0 0 0 3 0 0 1 Culotte en Cuir
+addequip 72 3 0 0 1 0 0 0 0 0 0 0 0 5 0 0 1 Dague
+addequip 71 3 0 0 2 0 0 0 0 0 0 0 0 10 0 0 1 Epée Courte
+addequip 70 3 -2 0 4 0 0 0 0 0 0 0 0 20 0 0 1 Epée Longue
+addequip 69 9 -6 0 8 0 0 0 0 0 0 0 0 40 0 0 1 Espadon
+addequip 68 3 4 0 -2 0 0 0 0 0 0 0 0 7 0 0 1 Fouet
+addequip 67 0 0 0 0 0 0 0 0 2 0 0 0 15 0 30 1 Fourrures
+addequip 66 3 -2 1 1 0 0 0 0 0 0 0 0 8 0 0 1 Gantelet (Ancien)
+addequip 66 3 -2 1 1 0 0 0 0 2 0 0 0 8 0 0 1 Gantelet (Nouveau)
+addequip 65 4 0 0 0 0 0 0 0 1 0 0 0 3 0 0 1 Gorgeron en cuir
+addequip 64 4 0 0 0 0 -1 0 0 2 0 0 0 5 0 0 1 Gorgeron en métal
+addequip 63 3 -1 0 2 0 0 0 0 0 0 0 0 13 0 0 1 Gourdin
+addequip 62 3 -1 0 3 0 0 0 0 0 0 0 0 15 0 0 1 Gourdin clouté
+addequip 61 1 0 -1 0 0 0 0 0 5 0 0 0 50 0 20 1 Gros'Porte
+addequip 60 9 -20 -15 28 0 0 0 -4 0 0 0 0 125 0 0 1 Grosse Stalagmite
+addequip 59 9 -4 0 6 0 0 0 0 0 0 0 0 40 0 0 1 Hache de Bataille
+addequip 58 9 -4 0 6 0 0 0 0 0 0 0 0 25 0 0 1 Hache de guerre en os
+addequip 57 9 -10 0 14 0 0 0 0 0 0 0 0 75 0 10 1 Hache de guerre en pierre
+addequip 56 9 -8 0 16 0 -4 0 0 0 0 0 0 75 -16 -50 1 Hache à deux mains d'Obsidienne
+addequip 55 9 -10 0 12 0 0 0 0 0 0 0 0 60 0 0 1 Hallebarde
+addequip 54 0 0 -4 0 0 0 0 0 8 0 0 0 80 0 80 1 Haubert d'écailles
+addequip 53 0 0 -4 0 0 0 0 0 9 0 0 0 90 0 90 1 Haubert de mailles
+addequip 52 2 -1 0 0 0 0 0 -2 4 0 0 0 20 0 20 1 Heaume
+addequip 51 5 0 0 0 0 0 0 0 1 0 0 0 10 0 10 1 Jambières en cuir
+addequip 50 5 0 0 0 0 0 0 0 1 0 0 0 3 0 10 1 Jambières en fourrure
+addequip 49 5 0 -1 0 0 0 0 0 3 0 0 0 20 0 10 1 Jambières en maille
+addequip 48 5 0 -2 0 0 0 0 0 4 0 0 0 25 0 10 1 Jambières en métal
+addequip 47 5 0 -1 0 0 0 0 0 2 0 0 0 10 0 10 1 Jambières en os
+addequip 46 3 2 0 6 0 -3 0 0 0 0 0 0 20 -11 -33 1 Lame d'Obsidienne
+addequip 45 3 0 0 2 0 0 0 0 0 0 0 0 8 0 0 1 Lame en os
+addequip 44 3 -2 0 4 0 0 0 0 0 0 0 0 20 0 0 1 Lame en pierre
+addequip 43 2 0 -1 0 0 0 0 1 0 0 0 0 3 10 0 1 Lorgnons
+addequip 42 3 1 -1 2 0 0 0 0 0 0 0 0 20 0 0 1 Machette
+addequip 41 0 0 2 0 0 0 0 0 1 0 0 0 8 0 0 1 Pagne de Mailles
+addequip 40 0 0 2 0 0 0 0 0 -1 0 0 0 5 0 0 1 Pagne en Cuir
+addequip 39 1 0 1 0 0 0 0 0 1 0 0 0 15 0 0 1 Rondache en bois
+addequip 38 1 0 1 0 0 0 0 0 2 0 0 0 30 0 0 1 Rondache en métal
+addequip 37 5 0 1 0 0 0 0 0 0 0 0 0 3 0 0 1 Sandales
+addequip 36 4 1 0 2 0 -4 0 0 0 0 0 0 3 40 40 1 Talisman d'Obsidienne
+addequip 35 4 0 0 0 0 -1 0 0 0 0 0 0 3 20 20 1 Talisman de pierre
+addequip 34 1 0 1 0 0 0 0 0 0 0 0 0 5 0 0 1 Targe
+addequip 33 3 1 0 1 0 0 0 1 0 0 0 0 8 0 0 1 Torche
+addequip 32 4 0 0 0 0 -2 0 0 0 0 0 0 3 40 40 1 Torque de pierre
+addequip 31 0 0 1 0 0 0 0 0 0 0 0 0 3 10 10 1 Tunique
+addequip 30 2 0 0 0 0 0 0 0 0 0 0 0 3 0 20 1 Turban
+addequip 29 9 2 0 -1 0 0 0 0 0 0 0 0 8 0 0 1 Baton Lesté
+addequip 28 3 -1 0 3 0 0 0 0 0 0 0 0 20 0 10 1 Grosse racine

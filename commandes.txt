@@ -1,0 +1,124 @@
+Voici une liste des commandes de MHA :
+--------------------------------------
+
+startserver : lance un serveur
+join xxx : se connecte au serveur de la machine xxx
+execute xxxx : permet d'executer les commandes du fichier xxxx
+
+Création de perso
+-----------------
+
+addtroll id nom race : créé un troll de la race "race" : 
+      0 = skrim
+      1 = durakuir
+      2 = kastar
+      3 = tomawak
+carac Niv Att Esq Deg Reg PV Vue Durée_DLA(en minutes) MM_pure RM_pure : donne les caracs de son troll
+addcomp num pourcentage : indique que l'on a la comp n° num à pourcentage %
+      1  = BS
+      2  = RA
+      3  = AM
+      4  = Camou
+      5  = AP
+      6  = Charger
+      7  = piège
+      8  = contre attaque
+      9  = CdB
+      10 = DE
+      11 = Frénésie
+      12 = LdP (non fonctionnel)
+      13 = Parer
+      14 = Pistage (je sais pas s'il marche :) )
+addsort num pourcentage : indique que l'on a le sort n° num à pourcentage %
+      1  = Hypno
+      2  = RP
+      3  = Vampirisme
+      4  = Projo
+      5  = AA
+      6  = AE
+      7  = AdA
+      8  = AdE
+      9  = ADD
+      10  = BaM
+      11 = BuM
+      12 = Explo
+      13 = FP
+      14 = FA
+      15 = Glue
+      16 = GdS
+      17 = Invisibilité
+      18 = Projection
+      19 = Sacro
+      20 = TP
+      21 = VA
+      22 = VL
+      23 = VLC
+      24 = VT
+addequip id type Att Esq Deg DLA reg pv vue armure_physique armure_magique effet_de_zone bidouille poids(en minute) mm rm est_équipé nom
+     Ajoute un équipement. est_équipé vaut 1 si l'équipement est équipé. effet_de_zone vaut 1 pour les potions à effet de zone et bidouille ne sert à rien pour l'instant (à mettre à 0)  Les différentes valeurs de type
+      ARMURE=0;
+      BOUCLIER=1;
+      CASQUE=2;
+      ARME_1_MAIN=3;
+      TALISMAN=4;
+      BOTTES=5;
+      BIDOUILLE=6;
+      ANNEAU=7;
+      BRIC_A_BRAC=8;
+      ARME_2_MAINS=9;
+      COMPOSANT=10;
+      PARCHEMIN=11;
+      POTION=12;
+      TAROT=13;
+      CHAMPIGNON=14;
+      MINERAI=15;
+addmouche type nom : rajoute une mouche du type "type" :
+      CROBATE     = 0;
+      VERTIE   = 1;
+      LUNETTES        = 2;
+      MIEL = 3;
+      XIDANT = 4;
+      RIVATANT = 5;
+      HEROS = 6;
+      CARNATION = 7;
+      NABOLISANT = 8;
+validtroll : indique que l'on a finit de créer son troll
+
+Lancer le jeu
+-------------
+
+startgame
+
+Pendant le jeu
+--------------
+
+* Toujours disponible :
+
+getprofil : infos sur son troll
+getinfostroll xxx : le profil public du troll n° xxx
+exit : quitter la partie
+
+* Lorsque que c'est votre tour de jeu (vous venez de recevoir un message begin XXX) :
+
+begindla : on veut jouer de suite sa DLA et l'activer
+decaletour xxx : ne pas jouer de suite mais dans xxx minutes
+getvue : obtenir les trolls sa vue 
+getlieux : obtenir les lieux dans sa vue
+
+* Pendant la partie
+
+getvue : comme précédemment
+getlieux : obtenir les lieux dans sa vue
+getinfoslieu : obtenir des infos sur le lieu sur lequel on se trouve
+deplace x y n : se déplacer de x cases en X, y cases en y, n cases en N. Un déplacement normal quoi
+attaque xxx : permet d'attaquer normalement le troll xxx (ne marche que s'il l'on est sur sa case, 
+    et qu'il est visible
+comp xxx [pleins de paramètres] : essaie de lancer la comp xxx (voir les numéros de comp si dessus).
+    Suivant la comp que vous voulez lancer, il y aura besoin de mettre des paramètres (le numéro d'un
+    troll, les déplacements souhaités...)
+sort xxx [pleins de paramètres] : essaie de lancer le sort xxx (voir les numéros de sort si dessus).
+    Suivant la sort que vous voulez lancer, il y aura besoin de mettre des paramètres (le numéro d'un
+    troll, les déplacements souhaités, la valuer de PV sacrifiés...)
+enddla : vous avez fini de jouer votre DLA
+decaletour xxx : demander de finir de jouer sa DLA dans xxx minutes
+getpa : connaitre le nombre de PA qu'il te reste 

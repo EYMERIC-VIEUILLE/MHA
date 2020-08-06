@@ -1,0 +1,135 @@
+     __  ___                  __        __          ____
+    /  |/  /___  __  ______  / /___  __/ /_  ____ _/ / /
+   / /|_/ / __ \/ / / / __ \/ __/ / / / __ \/ __ `/ / /
+  / /  / / /_/ / /_/ / / / / /_/ /_/ / / / / /_/ / / /
+ /_/  /_/\____/\__,_/_/ /_/\__/\__, /_/ /_/\__,_/_/_/
+                             /____/
+   ___,
+  /   |
+ |    |   ,_    _   _  _    __,
+ |    |  /  |  |/  / |/ |  /  |
+  \__/\_/   |_/|__/  |  |_/\_/|_/
+
+--------------------------
+|   Manuel des Joueurs   |
+--------------------------
+
+1/ Introduction
+---------------
+
+MountyHall Arena est un jeu permettant de faire du combat inter-trolls, sans impact dans MountyHall. Cela peut avoir plusieurs buts :
+ - un combat entre trolls parce que les deux sont trop éloignés pour ça
+ - tester une construction de personnage, afin de prévoir son évolution
+ - organiser une grande bataille entre 2 groupes ou 2 guildes, sans être soumis aux aléas (monstres, sommeil, livreur de pizzas, famille, ...)
+
+MountyHall Arena reprend les règles de MountyHall, sauf qu'au lieu d'attendre l'horloge, elle accélère quand personne ne joue, ce qui permet de jouer des matchs qui devraient durer une semaine sur une très courte durée. Toutes les possibilités de combat de MountyHall sont offertes (sauf les gowaps) : toutes les compétences de combat, tous les sorts de combat, possibilité de décaler sa DLA, de jouer en fin ou en milieu de DLA, d'activer en fin ou en milieu de DLA, de cumuler, de trimuler, de quadrimuler, etc.
+
+2/ Prérequis
+------------
+
+Le seul prérequis est d'installer java 1.5 (et donc d'avoir un OS qui permet de le faire). 
+Si vous lisez ceci, vous avez déjà téléchargé mha.zip. Vous pouvez toujours vérifier qu'une version plus récente n'a pas été postée.
+Ah si, c'est mieux de connaître les règles de MH pour jouer à MHA. Sinon d'une part vous ne comprendrez rien, et d'autre part vous aurez du mal à nous faire des remarques sur les éventuels bugs, améliorations, etc.
+
+Pour jouer :
+ - sous Windows, double-cliquer sur le fichier "SimpleGUI.cmd" ou directement sur le fichier MHA.jar
+ - sous Linux, demandez à Tilk
+ - sous Mac, demandez à quelqu'un qui a un Mac et/ou qui sait comment ça marche
+
+3/ Import de Troll
+------------------
+
+MHA permet d'importer directement votre troll depuis MH. C'est pratique : ça permet de jouer comme avec votre troll, ce qui est le but recherché dans la plupart des cas. Et pour ceux qui veulent faire du prédictif, ou carrément voir ce qu'ils donneraient en blonde, euh en Skrim, ben ça donne un point de départ.
+
+Attention ! L'import se fait via les scripts publics de MH. Le nombre d'appels à ses scripts est limité. Donc il vaut mieux éviter d'importer son personnage à chaque fois que vous jouez, ou que vous avez fait une erreur en le bidouillant. Faites une copie de sauvegarde, et adaptez.
+
+Pour importer un Troll, cliquer sur Partie --> importer un troll et entrer :
+ - le nom qu'il aura à MHA (ce n'est pas forcément le même que son nom MH)
+ - son numéro MH (là c'est forcément le même)
+ - votre mot de passe MH (promis on le stocke pas, mais on en a besoin. c'est pas forcément le vrai mot de passe, le mot de passe crypté suffit amplement)
+ - le fichier où vous voulez le stocker. Pensez à indiquer un chemin simple à retrouver (le bureau est très bien, ou le dossier ou vous avez dézippé MHA). N'oubliez pas de terminer le nom du fichier avec l'extension .mha, plus simple ensuite pour l'utiliser.
+
+Cliquez sur importer. Si vous ne vous êtes pas croutés, vous devriez avoir une jolie pop-up "import réussi". Sinon, corrigez et retentez.
+
+4/ Créer un troll
+--------------------
+
+Il est maintenant possible de créer un troll. pour celà, aller dans Partie --> Créer un troll
+les champs proposés sont :
+ - Nom du troll
+ - Numéro du troll
+
+ puis 4 onglets :
+ - Caractéristiques
+	*permet de choisir :
+	 > RM
+	 > MM
+	 > le nombre d'améliorations de chaque caractéristique (attention, le nombre que vous modifiez est bien le nombre d'améliorations, le total est à côté)
+	 * le nombre de mouches de chaque sorte
+
+ - Compétences
+	* permet de choisir ses compétences et le niveau  dans chaque compétence
+
+ - Sorts
+	* permet de choisir ses sorts et le niveau  dans chaque sort
+
+ - Équipement
+	* permet d'ajouter, de supprimer ou de modifier l'équipement du troll :
+	 > Supprimer : sélectionner le ou les équipements à supprimer (Ctrl pour sélectionner individuellement, Shift pour une série), et cliquer sur le bouton 'Supprimer'
+	 > Ajouter : ouvre une nouvelle fenetre permettant de rentrer les caractéristiques d'un objet, ou d'en charger un. il est possible de charger des équipements à partir de fichiers .mha ou .equ. tout fichier contenant des ligne 'addequip ***' peuvent être utilisés. MHA fournit une liste des équipements de base de MountyHall, en version Luxe MM/RM le cas échéant
+	> Modifier : permet de modifier l'équipement sélectionné.
+
+Sous les onglets, plusieurs boutons sont accessibles :
+ - Charger : permet d'initialiser le créateur de trolls avec les valerus contenues dans un fichier .mha déjà existant (par exemple pour étudier l'évolution d'un troll préexistant importé)
+ - Parcourir : pour choisir le fichier où sera sauvegardé le Troll (fichier .mha)
+ - Sauver : pour sauvegarder le troll dans le fichier sélectionné.
+
+5/ Lancer une partie
+--------------------
+
+Une fois l'import ou la création réussi, ou le fichier de troll créé, il est temps de jouer. Si vous avez des amis, ou des ennemis, vérifiez qu'ils en sont au même point que vous. Sinon, vous allez jouer tout seul, donc vous devriez en être à peu près au même point. 
+
+L'un d'entre vous doit faire le serveur, les autres seront les clients. N'importe lequel d'entre vous peut faire serveur, il faut juste décider à l'avance qui. Nous conseillons de choisir celui d'entre vous qui sait bidouiller son firewall, et éventuellement son routeur, que les autres puissent se connecter à lui.
+
+Celui qui doit lancer le serveur doit cliquer dans le menu Partie --> Démarrer le Serveur
+Le serveur écoute sur le port 4444. Donc il faut que le joueur hébergeant le serveur accepte les connexions sur le port 4444.
+Un panneau présentant les différentes options s'affiche : il permet de choisir :
+ - Le mode de jeu : 
+	* Deathmatch : chacun pour soi) 
+	* Team Deathmatch : le même, mais par équipe
+ - les options :
+	* le nombre maximum de joueurs sur le serveur
+	* le nombre maximum d'équipes en mode Team Deathmatch
+	* le nombre max de résurections (pour simuler une guerre de guilde avec grande tanière, par exemple)
+	* La durée maximum (en secondes) autorisée pour jouer sa DLA (ça évite qu'il y en ait un qui se barre sans prévenir et que ça bloque les autres)
+	* autoriser ou non le sort Téléportation
+	* autoriser ou non le sort Invisibilité
+	* permettre aux toms de commencer camouflés (utile dans une petite arène, par exemple)
+	* activer ou non les BMM (Bonus et Malus Magiques)XS
+
+Puis tous les joueurs doivent faire : Partie --> Rejoindre une partie
+Indiquer dans la pop-up l'IP du joueur hébergeant le serveur (à lui demander) et cliquer sur OK
+Si vous n'avez pas la pop-up "bienvenue sur ce serveur", 3 explications :
+ - vous vous êtes gourré dans l'IP
+ - le firewall du serveur (ou le votre) bloque la connexion : le reconfigurer
+ - le routeur du serveur ne reroute pas les connexions sur le port 4444 vers l'ordinateur du joueur hébergeant le serveur. vive le NAT, à reconfigurer
+
+Une fois connecter, cliquer sur Partie --> Charger un Troll. Choisir le fichier là où vous l'avez rangé (on vous avait dit de faire attention).
+
+
+6/ Jouer
+--------
+
+Une fois que tout le monde a chargé son troll, tous les joueurspeut faire Démarrer la partie (il est impossible de lancer la partie tant que tous les joueurs connectés n'ont pas chargé leur troll). C'est parti, chacun va pouvoir jouer à tour de rôle. L'ordre de début est tiré au hasard. (En gros, la date de début de la première DLA est tirée au hasard entre 0 et la durée de vôtre DLA. plus vôtre DLA est courte, plus vous avez de chance de jouer en premier).
+
+Lors de la DLA d'un joueur :
+Le joueur peut choisir de ne pas activer sa DLA tout de suite : il peut alors indiquer dans combien de minutes il veut la jouer. Le jeu passe au joueur qui doit jouer ensuite (ça peut être le même joueur, s'il a décidé de jouer 2 minutes après)
+S'il choisit d'activer, sa DLA est activée normalement (reg, BMM, PA, etc.). Il peut ensuite choisir ses actions dans la liste déroulante. Ces actions sont les actions de combat qu'il a à sa portée : ses compétences, attaque de base, déplacement de base, utilisation de parchemins et de potions, etc.
+Quand il a fini ses 6PA, il peut terminer son tour. Le jeu passe au joueur qui doit jouer ensuite
+
+7/ Fin de partie
+----------------
+
+Quand n'en a plus qu'un (ou une équipe), il (elle) a gagné. Rien ne vous empêche d'arrêter avant, si une équipe déclare forfait. On ferme tout, on relance, et on fait la revanche...
+
+Et on envoie les remarques, les PX, les GG, les sorts, à Tilk (36216) et TuttiRikikiMaoussKosTroll (61214) pour les remercier et les féliciter, et les aider à améliorer le produit.

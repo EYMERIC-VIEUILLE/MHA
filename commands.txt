@@ -1,0 +1,12 @@
+ver - show what version the mha game is - please quote this when sending bug reports
+manual - open the "On-line help system"
+startserver - create a new server on the local machine
+join <server IP> - connect to a previously create mha server
+killserver - destroy the server
+
+newplayer type (skill) color name - creates a new player with a name and a color
+(type can be: human ai) when type is "ai", skill can be easy or hard
+(color can be: black blue cyan darkgray green lightgray magenta orange pink red white yellow)
+delplayer name - delete a player with a name
+startgame type (autoplaceall) - once all the players have been set up, start the game
+(type can be: domination capital mission) (type "info" to check everything is set up)

@@ -1,0 +1,2 @@
+#!/bin/sh
+javac -encoding ISO-8859-1 -target 1.5 -Xlint:deprecation -d ../jar @listfiles && cp -f mha/ui/SimpleGUI/*.gif ../jar/mha/ui/SimpleGUI && cp -f mha/ui/SimpleGUI/*.png ../jar/mha/ui/SimpleGUI && cp -f manifest.mf ../archive&& jar cvmf ../archive/manifest.mf ../archive/MHA.jar -C ../jar . && cp -f commandes.txt ../archive && cp -f *.mha ../archive && cp -f *.cmd ../archive && cp -f LICENSE.txt ../archive && cp -f Manuel.txt ../archive && cp -f equipement.equ ../archive && cp -f "*.jar" ../archive 
