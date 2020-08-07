@@ -1,4 +1,9 @@
+#standalone application
+jar/*
+archive/*
+
 # Compiled class file
+bin/
 *.class
 
 # Log file
@@ -24,3 +29,6 @@ hs_err_pid*
 
 #CVS files
 CVS/
+
+# Trolls samples
+trolls/

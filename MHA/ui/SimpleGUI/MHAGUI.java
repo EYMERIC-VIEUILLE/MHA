@@ -1,43 +1,98 @@
 /*********************************************************************************
-*    This file is part of Mountyhall Arena                                       *
-*                                                                                *
-*    Mountyhall Arena is free software; you can redistribute it and/or modify    *
-*    it under the terms of the GNU General Public License as published by        *
-*    the Free Software Foundation; either version 2 of the License, or           *
-*    (at your option) any later version.                                         *
-*                                                                                *
-*    Mountyhall Arena is distributed in the hope that it will be useful,         *
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of              *
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               *
-*    GNU General Public License for more details.                                *
-*                                                                                *
-*    You should have received a copy of the GNU General Public License           *
-*    along with Mountyzilla; if not, write to the Free Software                  *
-*    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
-*********************************************************************************/
+ *    This file is part of Mountyhall Arena                                       *
+ *                                                                                *
+ *    Mountyhall Arena is free software; you can redistribute it and/or modify    *
+ *    it under the terms of the GNU General Public License as published by        *
+ *    the Free Software Foundation; either version 2 of the License, or           *
+ *    (at your option) any later version.                                         *
+ *                                                                                *
+ *    Mountyhall Arena is distributed in the hope that it will be useful,         *
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               *
+ *    GNU General Public License for more details.                                *
+ *                                                                                *
+ *    You should have received a copy of the GNU General Public License           *
+ *    along with Mountyzilla; if not, write to the Free Software                  *
+ *    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
+ *********************************************************************************/
 
 
 package mha.ui.SimpleGUI;
 
-import mha.engine.*;
-import mha.engine.core.*;
-
-import javax.swing.*;
-import javax.swing.event.MouseInputListener;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JViewport;
+import javax.swing.JWindow;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.text.Style;
+import javax.swing.text.StyledDocument;
+
+import mha.engine.MHA;
+import mha.engine.MHAAdapter;
+import mha.engine.MHAFileFilter;
+import mha.engine.MHAServer;
+import mha.engine.core.Equipement;
+import mha.engine.core.MHAGame;
+import mha.engine.core.Troll;
 
 public class MHAGUI extends JFrame implements MouseInputListener {
 
@@ -49,7 +104,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 	private JTextField Command;
 	private JButton Submit;
 	private static MHAGUI gui;
-//	private PicturePanel pp;
+	//	private PicturePanel pp;
 
 	private JLabel statusBar;
 	private JLabel hourBar;
@@ -75,12 +130,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 	private JComboBox actionComboBox;
 	private JButton action;
-	
+
 	private JMenu menuFile;
 	private JTabbedPane messages;
 	private Vector<Integer> listeTab=new Vector<Integer>();
 	private JTextField texteMessage;
-	
+
 	private int current_time=0;
 	private int nbPA=0;
 	private int trollId=-1;
@@ -98,7 +153,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 	private int y=0;
 	private int n=0;
 	private boolean finish=false;
-	
+
 	private boolean useTP;
 	private boolean useInvi;
 	private int mode;
@@ -106,7 +161,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 	private boolean isServer=false;
 	private Vector <Color> couleurs=new Vector<Color>();
 	private ColorCellRenderer rendererVue;
-	
+
 	private Vector <InfoTroll> trolls=new Vector<InfoTroll>();
 	public static String lastDirectory="";
 	private JDialog newDLA=null;
@@ -117,9 +172,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		SplashScreen sc=new SplashScreen("splash.png",3000);
 		mha=r;
 
-// this get all the commands from the game and does what needs to be done
+		// this get all the commands from the game and does what needs to be done
 		MHAAdapter SimpleMHAAdapter = new MHAAdapter() {
 
+			@Override
 			public void sendMessage(String output, boolean redrawNeeded, boolean repaintNeeded) {
 				try {
 					Style style = doc.addStyle("StyleName", null);
@@ -188,7 +244,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							}
 						}
 						JOptionPane.showMessageDialog(gui, name+" ("+id+") vient de quitter la partie", "Déconnexion", 	JOptionPane.PLAIN_MESSAGE);
-						
+
 					}
 					else if(strcmp(output,"Rules: "))
 					{
@@ -217,7 +273,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							newDLA=null;
 						}
 						action.setEnabled(false);
-						
+
 					}
 					else if(strcmp(output,"Partie terminée\n"))
 					{
@@ -230,7 +286,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						JOptionPane.showMessageDialog(gui, s, "Fin de partie", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else if(strcmp(output,"MHA serveur "))
-					{	
+					{
 						//System.out.println(output);
 						String s=extractString(output,"MHA serveur ");
 						String ls[] = s.split("\n");
@@ -247,14 +303,15 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							else
 							{
 								menuFile.remove(0);
-								menuFile.remove(0);									
+								menuFile.remove(0);
 							}
 							JMenuItem openFile = new JMenuItem("Charger un troll");
 							openFile.setMnemonic('R');
 							openFile.addActionListener(
 									new java.awt.event.ActionListener() {
+										@Override
 										public void actionPerformed(java.awt.event.ActionEvent e) {
-					
+
 											final JFileChooser fc;
 											if(lastDirectory.length()==0)
 												fc = new JFileChooser(new File ("."));
@@ -262,32 +319,32 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 												fc = new JFileChooser(lastDirectory);
 											MHAFileFilter filter = new MHAFileFilter("mha","Fiche de perso pour Mountyhall Arena");
 											fc.setFileFilter(filter);
-					
+
 											int returnVal = fc.showDialog(MHAGUI.this, "Charger");
 											if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
 												java.io.File file = fc.getSelectedFile();
 												// Write your code here what to do with selected file
-					
+
 												try {
-					
+
 													FileReader filein = new FileReader(file);
 													BufferedReader bufferin = new BufferedReader(filein);
 													lastDirectory = file.getCanonicalPath();
 													String input = bufferin.readLine();
 													input=input.replaceFirst("//.*","");
 													while(input != null) {
-					
+
 														go(input);
 														input = bufferin.readLine();
 														input=input.replaceFirst("//.*","");
 													}
 													bufferin.close();
-					
+
 												}
 												catch(Exception error) {
-					
+
 												}
-					
+
 											} else {
 												// Write your code here what to do if user has canceled Open dialog
 											}
@@ -296,8 +353,9 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							JMenuItem openBot = new JMenuItem("Charger un bot");
 							openBot.addActionListener(
 									new java.awt.event.ActionListener() {
+										@Override
 										public void actionPerformed(java.awt.event.ActionEvent e) {
-					
+
 											final JFileChooser fc;
 											if(lastDirectory.length()==0)
 												fc = new JFileChooser(new File ("."));
@@ -305,7 +363,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 												fc = new JFileChooser(lastDirectory);
 											MHAFileFilter filter = new MHAFileFilter("mha","Fiche de perso pour Mountyhall Arena");
 											fc.setFileFilter(filter);
-					
+
 											int returnVal = fc.showDialog(MHAGUI.this, "Charger");
 											if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
 												java.io.File file = fc.getSelectedFile();
@@ -323,7 +381,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 														input=input.replaceFirst("validtroll","validbot");
 														m.parser(input);
 														input = bufferin.readLine();
-														
+
 													}
 													bufferin.close();
 													output="Le bot a bien été chargé";
@@ -360,11 +418,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						JMenuItem demarrer = new JMenuItem("Arrêter le serveur");
 						demarrer.setMnemonic('K');
 						demarrer.addActionListener(
-							new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									mha.parser("killserver");
-								}
-							});
+								new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										mha.parser("killserver");
+									}
+								});
 						menuFile.remove(0);
 						menuFile.insert(demarrer,0);
 						isServer=true;
@@ -375,15 +434,16 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						JMenuItem demarrer = new JMenuItem("Démarrer le serveur");
 						demarrer.setMnemonic('S');
 						demarrer.addActionListener(
-							new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									new LaunchServer(gui,mha);
-								}
-							});
+								new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										new LaunchServer(gui,mha);
+									}
+								});
 						menuFile.remove(0);
 						menuFile.insert(demarrer,0);
 						isServer=false;
-					}					
+					}
 					else if(output.length()>6 && output.substring(0,6).equals("begin "))
 					{
 						final int time=Integer.parseInt(output.substring(6));
@@ -395,29 +455,30 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							dlaActive=false;
 						if(dlaActive)
 							s="Jouer";
-							
+
 						final JDialog dialog = new JDialog(gui,"Nouvelle DLA");
 						newDLA = dialog;
 						JLabel label = new JLabel("<html><p align=center>"
-							+ "Nous sommes le "+Troll.hour2string(current_time)+"<br>"
-							+ "Votre nouvelle DLA commence le "+Troll.hour2string(time)+"<br>"
-							+ "Que souhaitez vous faire ?");
+								+ "Nous sommes le "+Troll.hour2string(current_time)+"<br>"
+								+ "Votre nouvelle DLA commence le "+Troll.hour2string(time)+"<br>"
+								+ "Que souhaitez vous faire ?");
 						label.setHorizontalAlignment(JLabel.CENTER);
-//						Font font = label.getFont();
-//						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));
+						//						Font font = label.getFont();
+						//						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));
 						JButton closeButton = new JButton("Ne pas jouer de suite");
 						closeButton.addActionListener(new ActionListener() {
+							@Override
 							public void actionPerformed(ActionEvent e) {
 								dialog.setVisible(false);
 								dialog.dispose();
 								newDLA=null;
 								String s = (String)JOptionPane.showInputDialog(gui,
-									"De combien de minutes voulez vous décaler votre tour de jeu ?",
-									"Décaler sa DLA",
-									JOptionPane.PLAIN_MESSAGE,
-									null,
-									null,
-									"");
+										"De combien de minutes voulez vous décaler votre tour de jeu ?",
+										"Décaler sa DLA",
+										JOptionPane.PLAIN_MESSAGE,
+										null,
+										null,
+										"");
 								if ((s != null) && (s.length() > 0)) {
 									int i=Integer.parseInt(s);
 									mha.parser("decaletour "+i);
@@ -432,27 +493,29 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						if(dlaActive)
 						{
 							otherButton.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								dialog.setVisible(false);
-								dialog.dispose();
-								mha.parser("activeturn");
-								mha.parser("getpa");
-								mha.parser("getfullprofil");
-								mha.parser("getbm");							
-							} });
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									dialog.setVisible(false);
+									dialog.dispose();
+									mha.parser("activeturn");
+									mha.parser("getpa");
+									mha.parser("getfullprofil");
+									mha.parser("getbm");
+								} });
 						}
 						else
 						{
 							otherButton.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								dialog.setVisible(false);
-								dialog.dispose();
-								mha.parser("begindla");
-								mha.parser("getpa");
-								mha.parser("getvue");
-								mha.parser("getfullprofil");
-								mha.parser("getbm");
-							} });
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									dialog.setVisible(false);
+									dialog.dispose();
+									mha.parser("begindla");
+									mha.parser("getpa");
+									mha.parser("getvue");
+									mha.parser("getfullprofil");
+									mha.parser("getbm");
+								} });
 						}
 						JPanel closePanel = new JPanel();
 						closePanel.setLayout(new BoxLayout(closePanel,BoxLayout.LINE_AXIS));
@@ -461,7 +524,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						closePanel.add(Box.createHorizontalStrut(5));
 						closePanel.add(closeButton);
 						closePanel.add(Box.createHorizontalGlue());
-//						closePanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,5));
+						//						closePanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,5));
 						JPanel contentPane = new JPanel(new BorderLayout());
 						contentPane.add(label, BorderLayout.CENTER);
 						contentPane.add(closePanel, BorderLayout.PAGE_END);
@@ -469,7 +532,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						dialog.setContentPane(contentPane);
 						dialog.setSize(new Dimension(400, 150));
 						dialog.setLocationRelativeTo(gui);
-						dialog.setVisible(true);	
+						dialog.setVisible(true);
 					}
 					else if(output.length()>4 && output.substring(0,4).equals("PA: "))
 					{
@@ -500,7 +563,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						String [] ls=s.split(" ");
 						//System.out.println("pbm avec "+ls[0]);
 						int t=Integer.parseInt(ls[0]);
-						
+
 						((DefaultTableModel) tableEvent.getModel()).insertRow(0,new Object[]{hour2string(t),s.substring(ls[0].length()+1)});
 						TableCellRenderer renderer = tableEvent.getTableHeader().getDefaultRenderer();
 						TableColumn c = tableEvent.getColumnModel().getColumn(1);
@@ -526,15 +589,16 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					{
 						output=extractString(output,"Created: ");
 						String s=output.substring(output.lastIndexOf("(")+1,output.lastIndexOf(")"));
-						trollId=Integer.parseInt(s);		
+						trollId=Integer.parseInt(s);
 						JMenuItem demarrer = new JMenuItem("Démarrer la partie");
 						demarrer.setMnemonic('G');
 						demarrer.addActionListener(
-							new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									mha.parser("startgame");
-								}
-							});
+								new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										mha.parser("startgame");
+									}
+								});
 						if(isServer)
 						{
 							menuFile.remove(1);
@@ -592,7 +656,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 								((DefaultTableModel) tableMouches.getModel()).addRow(new Object[] {nom,type});
 							}
 						}
-						
+
 					}
 					else if(strcmp(output,"BM: "))
 					{
@@ -650,25 +714,25 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							if(it!=null)
 								if(Integer.parseInt(lss[0])!=trollId)
 									v.add(new Object[]{
-									Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[1])),Math.abs(y-Integer.parseInt(lss[2]))),Math.abs(n-Integer.parseInt(lss[3]))),
-									it.getId(),
-									it.getNom(),
-									it.getNiveau(),
-									it.getRace(),
-									Integer.parseInt(lss[1]),
-									Integer.parseInt(lss[2]),
-									Integer.parseInt(lss[3])});
+											Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[1])),Math.abs(y-Integer.parseInt(lss[2]))),Math.abs(n-Integer.parseInt(lss[3]))),
+											it.getId(),
+											it.getNom(),
+											it.getNiveau(),
+											it.getRace(),
+											Integer.parseInt(lss[1]),
+											Integer.parseInt(lss[2]),
+											Integer.parseInt(lss[3])});
 								else
 									tt=new Object[]{
-									Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[1])),Math.abs(y-Integer.parseInt(lss[2]))),Math.abs(n-Integer.parseInt(lss[3]))),
-									it.getId(),
-									it.getNom(),
-									it.getNiveau(),
-									it.getRace(),
-									Integer.parseInt(lss[1]),
-									Integer.parseInt(lss[2]),
-									Integer.parseInt(lss[3])};
-									
+											Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[1])),Math.abs(y-Integer.parseInt(lss[2]))),Math.abs(n-Integer.parseInt(lss[3]))),
+											it.getId(),
+											it.getNom(),
+											it.getNiveau(),
+											it.getRace(),
+											Integer.parseInt(lss[1]),
+											Integer.parseInt(lss[2]),
+											Integer.parseInt(lss[3])};
+
 						}
 						if(v.size()>1)
 							quickSort(v, 0, v.size()-1);
@@ -688,12 +752,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 								if(trolls.elementAt(j).getId()==(Integer) ((Object[])v.elementAt(i))[1])
 								{
 									cv.add(getCouleur(trolls.elementAt(j).getTeam()));
-//									System.out.println("Le "+i+"eme élément de la vue : "+trolls.elementAt(j).getId()+" est de la couleur "+trolls.elementAt(j).getTeam());
+									//									System.out.println("Le "+i+"eme élément de la vue : "+trolls.elementAt(j).getId()+" est de la couleur "+trolls.elementAt(j).getTeam());
 									break;
 								}
 							((DefaultTableModel) tableVue.getModel()).addRow((Object[]) v.elementAt(i));
 						}
-						
+
 					}
 					else if(strcmp(output,"Lieux: "))
 					{
@@ -714,13 +778,13 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							for(int j=2;j<lss.length-3;j++)
 								lss[1]+=" "+lss[j];
 							v.add(new Object[]{
-							Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[lss.length-3])),Math.abs(y-Integer.parseInt(lss[lss.length-2]))),Math.abs(n-Integer.parseInt(lss[lss.length-1]))),
-							Integer.parseInt(lss[0]),
-							lss[1],
-							Integer.parseInt(lss[lss.length-3]),
-							Integer.parseInt(lss[lss.length-2]),
-							Integer.parseInt(lss[lss.length-1])});
-									
+									Math.max(Math.max(Math.abs(x-Integer.parseInt(lss[lss.length-3])),Math.abs(y-Integer.parseInt(lss[lss.length-2]))),Math.abs(n-Integer.parseInt(lss[lss.length-1]))),
+									Integer.parseInt(lss[0]),
+									lss[1],
+									Integer.parseInt(lss[lss.length-3]),
+									Integer.parseInt(lss[lss.length-2]),
+									Integer.parseInt(lss[lss.length-1])});
+
 						}
 						if(v.size()>1)
 							quickSort(v, 0, v.size()-1);
@@ -729,7 +793,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							((DefaultTableModel) tableLieux.getModel()).addRow((Object[]) v.elementAt(i));
 						}
 						output="";
-						
+
 					}
 					else if(strcmp(output,"newTroll "))
 					{
@@ -768,19 +832,19 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 							messages.insertTab("Messages du bot",null,jsp,"",1);
 							setTitle(product+" : "+nom);
-							
+
 							if(mode==MHAGame.MODE_TEAM_DEATHMATCH)
 							{
 								Vector <Color> vc=new Vector <Color>();
 								for(int i=0;i<Math.min(nbTeam,listeCouleurs.length);i++)
 									vc.add(listeCouleurs[i]);
 								dialogChooseTeam(vc);
-						
+
 								//If a string was returned, say so.
-		//						if ((s != null) && (s.length() > 0)) {
-		//							setLabel("Green eggs and... " + s + "!");
-		//							return;
-		//						}
+								//						if ((s != null) && (s.length() > 0)) {
+								//							setLabel("Green eggs and... " + s + "!");
+								//							return;
+								//						}
 							}
 						}
 					}
@@ -825,15 +889,17 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							idTeam=team;
 						}
 						Thread t=new Thread(new Runnable() {
+							@Override
 							public void run() {
 								SwingUtilities.invokeLater(new Runnable() {
+									@Override
 									public void run() {
 										tableTrolls.updateUI();
 									}
 								});
 							}});
 						t.start();
-						
+
 					}
 					else if(output.equals("The game begins"))
 					{
@@ -921,7 +987,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 							}
 						output="";
 						((JTextArea) ((JViewport) ((JScrollPane) messages.getComponentAt(idTab)).getComponent(0) ).getView())
-							.append("<"+s+">"+s1+System.getProperty("line.separator"));
+						.append("<"+s+">"+s1+System.getProperty("line.separator"));
 						if(messages.getSelectedIndex()!=idTab)
 							messages.setForegroundAt(idTab,Color.RED);
 					}
@@ -930,35 +996,36 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						String s=extractString(output,"InfosTroll: ");
 						output="";
 						final JDialog dialog = new JDialog(gui,"Profil d'un Troll");
-				
+
 						//Add contents to it. It must have a close button,
 						//since some L&Fs (notably Java/Metal) don't provide one
 						//in the window decorations for dialogs.
 						JLabel label = new JLabel("<html><p align=center>"+s.replace("\n","<br>"));
 						label.setHorizontalAlignment(JLabel.CENTER);
 						Font font = label.getFont();
-						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));	
+						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));
 						JButton closeButton = new JButton("Fermer");
 						closeButton.addActionListener(new ActionListener() {
+							@Override
 							public void actionPerformed(ActionEvent e) {
-							dialog.setVisible(false);
-							dialog.dispose();
+								dialog.setVisible(false);
+								dialog.dispose();
 							}
 						});
 						JPanel closePanel = new JPanel();
 						closePanel.setLayout(new BoxLayout(closePanel,
-										BoxLayout.LINE_AXIS));
+								BoxLayout.LINE_AXIS));
 						closePanel.add(Box.createHorizontalGlue());
 						closePanel.add(closeButton);
 						closePanel.setBorder(BorderFactory.
-							createEmptyBorder(0,0,5,5));
-				
+								createEmptyBorder(0,0,5,5));
+
 						JPanel contentPane = new JPanel(new BorderLayout());
 						contentPane.add(new JScrollPane(label), BorderLayout.CENTER);
 						int id=Integer.parseInt(s.substring(s.indexOf(":")+2,s.indexOf("\n")));
 						for(int i=0;i<trolls.size();i++)
 							if(trolls.elementAt(i).getId()==id && trolls.elementAt(i).getIcon()!=null &&
-								 trolls.elementAt(i).getIcon().getImageLoadStatus()==MediaTracker.COMPLETE)
+							trolls.elementAt(i).getIcon().getImageLoadStatus()==MediaTracker.COMPLETE)
 							{
 								JLabel avatar = new JLabel();
 								avatar.setIcon(trolls.elementAt(i).getIcon());
@@ -970,11 +1037,11 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 								contentPane.add(avatar, BorderLayout.EAST);
 								break;
 							}
-						
+
 						contentPane.add(closePanel, BorderLayout.PAGE_END);
 						contentPane.setOpaque(true);
 						dialog.setContentPane(contentPane);
-				
+
 						//Show it.
 						dialog.setSize(new Dimension(300, 300));
 						dialog.setLocationRelativeTo(gui);
@@ -986,35 +1053,36 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						String s=extractString(output,"InfosLieu: ");
 						output="";
 						final JDialog dialog = new JDialog(gui,"Lieu");
-				
+
 						//Add contents to it. It must have a close button,
 						//since some L&Fs (notably Java/Metal) don't provide one
 						//in the window decorations for dialogs.
 						JLabel label = new JLabel("<html><p align=center>"+s.replace("\n","<br>"));
 						label.setHorizontalAlignment(JLabel.CENTER);
 						Font font = label.getFont();
-						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));	
+						label.setFont(label.getFont().deriveFont(font.PLAIN,14.0f));
 						JButton closeButton = new JButton("Fermer");
 						closeButton.addActionListener(new ActionListener() {
+							@Override
 							public void actionPerformed(ActionEvent e) {
-							dialog.setVisible(false);
-							dialog.dispose();
+								dialog.setVisible(false);
+								dialog.dispose();
 							}
 						});
 						JPanel closePanel = new JPanel();
 						closePanel.setLayout(new BoxLayout(closePanel,
-										BoxLayout.LINE_AXIS));
+								BoxLayout.LINE_AXIS));
 						closePanel.add(Box.createHorizontalGlue());
 						closePanel.add(closeButton);
 						closePanel.setBorder(BorderFactory.
-							createEmptyBorder(0,0,5,5));
-				
+								createEmptyBorder(0,0,5,5));
+
 						JPanel contentPane = new JPanel(new BorderLayout());
 						contentPane.add(new JScrollPane(label), BorderLayout.CENTER);
 						contentPane.add(closePanel, BorderLayout.PAGE_END);
 						contentPane.setOpaque(true);
 						dialog.setContentPane(contentPane);
-				
+
 						//Show it.
 						dialog.setSize(new Dimension(300, 300));
 						dialog.setLocationRelativeTo(gui);
@@ -1035,9 +1103,9 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 						JTextArea jta=((JTextArea) ((JViewport) ((JScrollPane) messages.getComponentAt(1)).getComponent(0) ).getView());
 						jta.append(System.getProperty("line.separator")+"<"+hour2string(current_time)+">"+System.getProperty("line.separator")+output+System.getProperty("line.separator"));
 						jta.setCaretPosition(jta.getLineEndOffset(jta.getLineCount()-1));
-						JOptionPane.showMessageDialog(gui, output, "Résultat", 	JOptionPane.PLAIN_MESSAGE);						
+						JOptionPane.showMessageDialog(gui, output, "Résultat", 	JOptionPane.PLAIN_MESSAGE);
 					}
-/*					Color c = mha.getCurrentPlayerColor();
+					/*					Color c = mha.getCurrentPlayerColor();
 
 					if (c != null) {
 						StyleConstants.setForeground(style, c.darker() );
@@ -1047,14 +1115,14 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					}*/
 					//StyleConstants.setBold(style, true);
 
-				
+
 					//if (doc.getLength() > 12000) {
 					//doc.remove(0,2000);
 					//}
-//					popNext=false;
-//					if(updateEquip)
-//						mha.parser("getequip");
-//					updateEquip=false;
+					//					popNext=false;
+					//					if(updateEquip)
+					//						mha.parser("getequip");
+					//					updateEquip=false;
 					if(output.length()>0)
 						doc.insertString(doc.getLength(), output.replace("\n",System.getProperty("line.separator")) + System.getProperty("line.separator") , style);
 					Console.setCaretPosition(doc.getLength());
@@ -1074,9 +1142,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			 * checks if the the frame needs input
 			 * @param s determines what needs input
 			 */
+			@Override
 			public void needInput(int s) {
 
-			/*	Submit.setEnabled(true);
+				/*	Submit.setEnabled(true);
 				Command.setEnabled(true);
 				Command.requestFocus();
 				statusBar.setText("Done... Ready");*/
@@ -1086,9 +1155,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			/**
 			 * Blocks Input
 			 */
+			@Override
 			public void noInput() {
 
-			/*	statusBar.setText("Working...");
+				/*	statusBar.setText("Working...");
 				Submit.setEnabled(false);
 				Command.setEnabled(false);*/
 
@@ -1097,9 +1167,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			/**
 			 * Displays a message
 			 */
+			@Override
 			public void setGameStatus(String state) {
 
-			/*	gameStatus.setText(state);
+				/*	gameStatus.setText(state);
 				gameStatus.repaint();*/
 
 			}
@@ -1108,6 +1179,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			 * Starts the game
 			 * @param s If the game is a local game
 			 */
+			@Override
 			public void startGame(boolean s) {
 
 			}
@@ -1115,6 +1187,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			/**
 			 * Closes the game
 			 */
+			@Override
 			public void closeGame() {
 
 
@@ -1122,7 +1195,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		};
 
-	/*	gameStatus = new JLabel("");*/
+		/*	gameStatus = new JLabel("");*/
 
 		mha.addMHAListener( SimpleMHAAdapter );
 		history = new Vector();
@@ -1134,17 +1207,17 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		Command = new JTextField();
 		Submit = new JButton();
-		
-//		String[] columnNames = {"Date","Evènement"};
-//		Object[][] data = {};
-//		setIconImage((new ImageIcon(MHAGUI.class.getResource("mha.gif"))).getImage());
+
+		//		String[] columnNames = {"Date","Evènement"};
+		//		Object[][] data = {};
+		//		setIconImage((new ImageIcon(MHAGUI.class.getResource("mha.gif"))).getImage());
 		initGUI();
 
 		setResizable(false);
 
-	//	pack();
+		//	pack();
 
-//		statusBar.setText("Ready");
+		//		statusBar.setText("Ready");
 	}
 
 	private void reInitGui()
@@ -1167,23 +1240,24 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		couleurs=new Vector<Color>();
 		trolls=new Vector<InfoTroll>();
 		getContentPane().removeAll();
-		
+
 		initGUI();
 		if(isServer)
 		{
 			JMenuItem demarrer = new JMenuItem("Arrêter le serveur");
 			demarrer.setMnemonic('K');
 			demarrer.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						mha.parser("killserver");
-					}
-				});
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							mha.parser("killserver");
+						}
+					});
 			menuFile.remove(0);
 			menuFile.insert(demarrer,0);
 		}
 	}
-	
+
 	class MyTableModel extends DefaultTableModel {
 		int col=-1;
 		public MyTableModel()
@@ -1193,32 +1267,35 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			super();
 			col=c;
 		}
+		@Override
 		public boolean isCellEditable(int row, int c) {
 			return col==c;
-        	}
+		}
+		@Override
 		public Class getColumnClass(int column)
 		{
 			//if(column==0)
 			//	return (new ImageIcon()).getClass();
 			return getValueAt(0, column).getClass();
 		}
-        }
-	
+	}
+
 	class CenterRenderer extends DefaultTableCellRenderer
 	{
 		public CenterRenderer()
 		{
 			setHorizontalAlignment( CENTER );
 		}
- 
+
+		@Override
 		public Component getTableCellRendererComponent(
-			JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+				JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			return this;
 		}
 	}
-	
+
 	public final static String[] NOM_ACTION={"*** Choisissez une action ***","Se déplacer","Attaquer","Utiliser une potion/parchemin","Se concentrer","Terminer de jouer","Finir de jouer plus tard","Décaler sa DLA"};
 	public final static int[] COUT_ACTION={0,1,4,2,1,0,1,0};
 	public final static int[] COUT_COMP={2,2,2,2,4,4,4,2,4,1,6,2,2,1};
@@ -1226,8 +1303,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 	public final static int[] COUT_SORT={4,4,4,4,1,2,2,2,2,2,2,6,2,2,2,4,3,2,2,6,2,2,2,2};
 	public final int[] convertSort2Check = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,19,21,22,24,25,26,27,14,18,20,23};
 	public final int[] convertCheck2Sort = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,25,15,16,17,26,18,27,19,20,28,21,22,23,24};
-	
-	 
+
+
 	private void updatePA()
 	{
 		statusBar.setText("Il vous reste "+nbPA+" PA");
@@ -1260,21 +1337,21 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		{
 			Object[] options = {"Oui, j'ai fini", "Non, plus tard"};
 			int i = JOptionPane.showOptionDialog(gui,
-				"Vous n'avez plus de points d'action\nVoulez-vous terminer votre tour ?",
-				"Fin du tour",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
+					"Vous n'avez plus de points d'action\nVoulez-vous terminer votre tour ?",
+					"Fin du tour",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[0]);
 			if (i == JOptionPane.YES_OPTION) {
 				dlaActive=false;
 				mha.parser("enddla");
-			} 
+			}
 		}
-		
+
 	}
-	 
+
 	private void initGUI() {
 
 		// set title
@@ -1287,7 +1364,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		c.insets = new java.awt.Insets(3, 3, 3, 3);
 
-/*		Dimension ppSize = new Dimension(677,425);
+		/*		Dimension ppSize = new Dimension(677,425);
 
 		pp.setPreferredSize(ppSize);
 		pp.setMinimumSize(ppSize);
@@ -1297,7 +1374,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		pp.addMouseListener(this);
 		pp.addMouseMotionListener(this);*/
-		
+
 		GridBagConstraints c2 = new GridBagConstraints();
 		JPanel jp = new JPanel();
 		jp.setLayout(new java.awt.GridBagLayout());
@@ -1306,7 +1383,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		tableEvent = new JTable(model);
 		model.addColumn("Date");
 		model.addColumn("Evènement");
-		
+
 		model = new MyTableModel(1);
 		tableTrolls = new JTable(model);
 		model.addColumn("");
@@ -1314,7 +1391,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		model.addColumn("Nom");
 		model.addColumn("Niveau");
 		model.addColumn("Race");
-		
+
 		model = new MyTableModel(1);
 		tableVue = new JTable(model);
 		model.addColumn("Distance");
@@ -1325,7 +1402,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		model.addColumn("X");
 		model.addColumn("Y");
 		model.addColumn("N");
-		
+
 		model = new MyTableModel(1);
 		tableLieux = new JTable(model);
 		model.addColumn("Distance");
@@ -1334,14 +1411,14 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		model.addColumn("X");
 		model.addColumn("Y");
 		model.addColumn("N");
-		
+
 
 		model = new MyTableModel();
 		tableBM = new JTable(model);
 		model.addColumn("Nom");
 		model.addColumn("Description");
 		model.addColumn("Durée");
-		
+
 		model = new MyTableModel();
 		tableMouches = new JTable(model);
 		model.addColumn("Nom");
@@ -1349,29 +1426,29 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		statusBar = new JLabel("",JLabel.CENTER);
 		hourBar = new JLabel("Pas de partie en cours",JLabel.CENTER);
-		
+
 		profil=new JEditorPane("text/html","<html>");
 		profil.setOpaque(true);
 		profil.setEditable(false);
 		profil.setBackground(Color.WHITE);
-//		profil.setHorizontalAlignment(SwingConstants.CENTER);
+		//		profil.setHorizontalAlignment(SwingConstants.CENTER);
 		profil.setFont(profil.getFont().deriveFont(Font.PLAIN,12.0f));
-		
+
 		equipement=new JEditorPane("text/html","<html>");
 		equipement.setOpaque(true);
 		equipement.setEditable(false);
 		equipement.setBackground(Color.WHITE);
-//		equipement.setHorizontalAlignment(SwingConstants.CENTER);
+		//		equipement.setHorizontalAlignment(SwingConstants.CENTER);
 		equipement.setFont(profil.getFont().deriveFont(Font.PLAIN,12.0f));
 
 		Con = new JScrollPane(Console);
-		
+
 		String[] str = { "*** Choisissez une action ***" };
 		actionComboBox = new JComboBox(str);
 		actionComboBox.setRenderer(new ComboBoxRenderer());
 		actionComboBox.addActionListener(new BlockComboListener(actionComboBox));
 		actionComboBox.setEnabled(false);
-		
+
 		// Console.setBackground(Color.white); // not needed with swing
 		Console.setEditable(false);
 
@@ -1382,7 +1459,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		Command.setPreferredSize(new java.awt.Dimension(560,20));
 		Command.setMinimumSize(new java.awt.Dimension(560,20));
 		Command.setMaximumSize(new java.awt.Dimension(560,20));
-		
+
 		statusBar.setPreferredSize(new java.awt.Dimension(220,20));
 		statusBar.setMinimumSize(new java.awt.Dimension(220,20));
 		statusBar.setMaximumSize(new java.awt.Dimension(220,20));
@@ -1402,11 +1479,11 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		column.setMaxWidth(2000);
 
 		column.setCellRenderer(new MultiLineCellRenderer());
-		 
+
 		JScrollPane scrollPane = new JScrollPane(tableEvent);
 		scrollPane.setPreferredSize(new java.awt.Dimension(697,100));
 		scrollPane.setMinimumSize(new java.awt.Dimension(697,100));
-		
+
 		tableTrolls.setPreferredScrollableViewportSize(new Dimension(690, 100));
 		tableTrolls.setDragEnabled(false);
 		tableTrolls.setShowHorizontalLines(true);
@@ -1436,7 +1513,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JScrollPane scrollTrollPane = new JScrollPane(tableTrolls);
 		scrollTrollPane.setPreferredSize(new java.awt.Dimension(697,100));
 		scrollTrollPane.setMinimumSize(new java.awt.Dimension(697,100));
-				
+
 		centerRenderer = new CenterRenderer();
 		tableBM.setPreferredScrollableViewportSize(new Dimension(690, 100));
 		tableBM.setDragEnabled(false);
@@ -1455,8 +1532,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		tableBM.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		JScrollPane scrollBMPane = new JScrollPane(tableBM);
 		scrollBMPane.setPreferredSize(new java.awt.Dimension(697,100));
-		scrollBMPane.setMinimumSize(new java.awt.Dimension(697,100));	
-		
+		scrollBMPane.setMinimumSize(new java.awt.Dimension(697,100));
+
 		tableMouches.setPreferredScrollableViewportSize(new Dimension(690, 100));
 		tableMouches.setDragEnabled(false);
 		tableMouches.setShowHorizontalLines(true);
@@ -1472,8 +1549,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JScrollPane scrollMouchesPane = new JScrollPane(tableMouches);
 		scrollMouchesPane.setPreferredSize(new java.awt.Dimension(697,100));
 		scrollMouchesPane.setMinimumSize(new java.awt.Dimension(697,100));
-		
-		
+
+
 		tableVue.setPreferredScrollableViewportSize(new Dimension(690, 100));
 		tableVue.setDragEnabled(false);
 		tableVue.setShowHorizontalLines(true);
@@ -1508,7 +1585,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		tableVue.getTableHeader().setResizingAllowed(false);
 		tableVue.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableVue.setRowSelectionAllowed(false);
-		
+
 		tableLieux.setPreferredScrollableViewportSize(new Dimension(690, 100));
 		tableLieux.setDragEnabled(false);
 		tableLieux.setShowHorizontalLines(true);
@@ -1536,7 +1613,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		column.setPreferredWidth(30);
 		tableLieux.getTableHeader().setResizingAllowed(false);
 		tableLieux.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
+
 		JPanel tablePane =new JPanel();
 		tablePane.setLayout(new BoxLayout(tablePane,BoxLayout.PAGE_AXIS));
 		JLabel jl = new JLabel("Trolls");
@@ -1550,18 +1627,18 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		tablePane.add(jl);
 		tablePane.add(tableLieux.getTableHeader() );
 		tablePane.add(tableLieux);
-//		tablePane.add(Box.createHorizontalStrut(10));
-		
+		//		tablePane.add(Box.createHorizontalStrut(10));
+
 		JScrollPane scrollProfilPane = new JScrollPane(profil);
 		scrollProfilPane.setPreferredSize(new java.awt.Dimension(697,100));
 		scrollProfilPane.setMinimumSize(new java.awt.Dimension(697,100));
 		scrollProfilPane.getVerticalScrollBar().setUnitIncrement(10);
-		
+
 		JScrollPane scrollEquipPane = new JScrollPane(equipement);
 		scrollEquipPane.setPreferredSize(new java.awt.Dimension(697,100));
 		scrollEquipPane.setMinimumSize(new java.awt.Dimension(697,100));
 		scrollEquipPane.getVerticalScrollBar().setUnitIncrement(10);
-		
+
 		messages = new JTabbedPane(JTabbedPane.BOTTOM,JTabbedPane.SCROLL_TAB_LAYOUT);
 		JTextArea jta=new JTextArea();
 		jta.setLineWrap(true);
@@ -1572,6 +1649,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		messages.addTab("Canal public",null,scroll,"Le canal de tous les trolls");
 		messages.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent evt) {
 				JTabbedPane pane = (JTabbedPane)evt.getSource();
 				int sel = pane.getSelectedIndex();
@@ -1607,12 +1685,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					send.setEnabled(false);
 			}
 		});
-		
+
 		texteMessage = new JTextField();
 		texteMessage.setPreferredSize(new java.awt.Dimension(550,20));
 		texteMessage.setMinimumSize(new java.awt.Dimension(550,20));
 		texteMessage.setMaximumSize(new java.awt.Dimension(550,20));
-		
+
 		JPanel jp2 = new JPanel();
 		jp2.setLayout(new BorderLayout());
 		jp2.add(messages);
@@ -1624,8 +1702,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		jp3.add(send);
 		jp3.add(Box.createHorizontalGlue());
 		jp2.add(jp3,BorderLayout.SOUTH);
-		
-		
+
+
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setPreferredSize(new java.awt.Dimension(697,425));
 		tabbedPane.setMinimumSize(new java.awt.Dimension(697,425));
@@ -1639,8 +1717,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		tabbedPane.addTab("Messages", null, jp2, "Liste des messages");
 		tabbedPane.addTab("Evénements", null, scrollPane, "Liste des derniers événements");
 		tabbedPane.addTab("Console", null, jp, "La console de débugage");
-//		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
-		
+		//		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
+
 		Submit.setText("Envoyer");
 
 		action = new JButton();
@@ -1649,11 +1727,11 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		action.setMinimumSize(new java.awt.Dimension(100,20));
 		action.setMaximumSize(new java.awt.Dimension(100,20));
 		action.setEnabled(false);
-		
+
 		actionComboBox.setPreferredSize(new java.awt.Dimension(300,20));
 		actionComboBox.setMinimumSize(new java.awt.Dimension(300,20));
 		actionComboBox.setMaximumSize(new java.awt.Dimension(300,20));
-		
+
 		statusBar.setPreferredSize(new java.awt.Dimension(200,20));
 		statusBar.setMinimumSize(new java.awt.Dimension(200,20));
 		statusBar.setMaximumSize(new java.awt.Dimension(200,20));
@@ -1664,7 +1742,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		c.gridheight = 1; // height
 		// add hour bar
 		getContentPane().add(hourBar, c);
-		
+
 		c.gridx = 0; // col
 		c.gridy = 1; // row
 		c.gridwidth = 3; // width
@@ -1672,7 +1750,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		getContentPane().add(tabbedPane, c); // Pix
 
-//		c.fill = GridBagConstraints.BOTH;
+		//		c.fill = GridBagConstraints.BOTH;
 
 		c.gridx = 2; // col
 		c.gridy = 3; // row
@@ -1696,12 +1774,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		c2.gridheight = 1; // height
 		jp.add(Con, c2);
 
-/*		c.gridx = 0; // col
+		/*		c.gridx = 0; // col
 		c.gridy = 2; // row
 		c.gridwidth = 3; // width
 		c.gridheight = 1; // height
 		getContentPane().add(Con, c);
-*/
+		 */
 		c.gridx = 1; // col
 		c.gridy = 3; // row
 		c.gridwidth = 1; // width
@@ -1716,6 +1794,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		getContentPane().add(statusBar, c);
 
 		ActionListener readCommand = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent a) {
 
 				String input = Command.getText();
@@ -1727,15 +1806,17 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 			}
 		};
-		
+
 		ActionListener sendAction = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent a) {
 				String commande = (String) actionComboBox.getSelectedItem();
 				analyseAction(commande);
 			}
 		};
-		
+
 		ActionListener readMessage = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent a) {
 				String input = texteMessage.getText();
 				if(input.equals(""))
@@ -1767,6 +1848,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			CommandKeyAdapter(MHAGUI adaptee) {
 				this.adaptee = adaptee;
 			}
+			@Override
 			public void keyPressed(KeyEvent key) {
 
 
@@ -1822,16 +1904,17 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			final UIManager.LookAndFeelInfo laf=lafi[i];
 			//rbMenuItem.setSelected(true);
 			rbMenuItem.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try{
-						UIManager.setLookAndFeel(laf.getClassName());
-						rbMenuItem.setSelected(true);
-						SwingUtilities.updateComponentTreeUI(gui);
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try{
+								UIManager.setLookAndFeel(laf.getClassName());
+								rbMenuItem.setSelected(true);
+								SwingUtilities.updateComponentTreeUI(gui);
+							}
+							catch(Exception ex) {ex.printStackTrace();}
 						}
-						catch(Exception ex) {ex.printStackTrace();}
-					}
-				});
+					});
 			if(laf.getName().equals(UIManager.getLookAndFeel().getName()))
 				rbMenuItem.setSelected(true);
 			group.add(rbMenuItem);
@@ -1846,6 +1929,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		Commands.setMnemonic('C');
 		Commands.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						Commands();
 					}
@@ -1855,6 +1939,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JMenuItem helpMan = new JMenuItem("A propos");
 		helpMan.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						openAbout();
 					}
@@ -1869,6 +1954,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		ClearConsole.setMnemonic('C');
 		ClearConsole.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						Console.setText("");
 					}
@@ -1879,6 +1965,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		ClearHistory.setMnemonic('H');
 		ClearHistory.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						history.clear();
 						pointer = -1;
@@ -1887,11 +1974,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		menuClear.add(ClearHistory);
 
 		// create Open menu item
-		
+
 		JMenuItem demarrer = new JMenuItem("Démarrer le serveur");
 		demarrer.setMnemonic('S');
 		demarrer.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						new LaunchServer(gui,mha);
 					}
@@ -1902,17 +1990,18 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		join.setMnemonic('J');
 		join.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						String s = (String)JOptionPane.showInputDialog(gui,
-                                        		"Indiquez l'adresse du serveur:",
-                                        		"Rejoindre une partie",
-                                        		JOptionPane.PLAIN_MESSAGE,
-                                        		null,
-                                        		null,
-                                        		"localhost");
-                    				//If a string was returned, say so.
-                    				if ((s != null) && (s.length() > 0)) {
-                        				mha.parser("join " + s);
+								"Indiquez l'adresse du serveur:",
+								"Rejoindre une partie",
+								JOptionPane.PLAIN_MESSAGE,
+								null,
+								null,
+								"localhost");
+						//If a string was returned, say so.
+						if ((s != null) && (s.length() > 0)) {
+							mha.parser("join " + s);
 						}
 					}
 				});
@@ -1920,6 +2009,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JMenuItem importation = new JMenuItem("Importer un troll");
 		importation.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						ImportationTroll it=new ImportationTroll(gui);
 					}
@@ -1930,18 +2020,20 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JMenuItem creation = new JMenuItem("Créer un troll");
 		creation.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						CreationTroll ct=new CreationTroll(gui);
 					}
 				});
 		menuFile.add(creation);
-		
-		
+
+
 		// create Exit menu item
 		JMenuItem fileExit = new JMenuItem("Quitter");
 		fileExit.setMnemonic('E');
 		fileExit.addActionListener(
 				new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						System.exit(0);
 					}
@@ -1955,9 +2047,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		// sets menu bar
 		setJMenuBar(menuBar);
-//		setBounds(new java.awt.Rectangle(0,0,915,609));
+		//		setBounds(new java.awt.Rectangle(0,0,915,609));
 		addWindowListener(
 				new java.awt.event.WindowAdapter() {
+					@Override
 					public void windowClosing(java.awt.event.WindowEvent evt) {
 						exitForm();
 					}
@@ -1972,7 +2065,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		System.exit(0);
 	}
-	
+
 	private void analyseAction(String s)
 	{
 		int id=-1;
@@ -2004,47 +2097,47 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		switch(id)
 		{
-			case 0: return;
-			case 1: dialogDeplacement("deplace ");return;
-			case 2: dialogTrollCible("Attaquer :","attaque ");return;
-			case 3: dialogTrollPopo(false);return;
-			case 4: String s1 = (String)JOptionPane.showInputDialog(gui,
-					"Pendant combien de PA voulez-vous vous concentrer ?",
-					"Se concentrer",
-					JOptionPane.PLAIN_MESSAGE,
-					null,
-					null,
-					"");
-				if ((s1 != null) && (s1.length() > 0)) {
-					popNext=true;
-					mha.parser("concentre "+s1);
-				}
-				return;
-			case 5: mha.parser("enddla");dlaActive=false;return;
-			case 6: s = (String)JOptionPane.showInputDialog(gui,
-					"Dans combien de minutes voulez-vous finir votre tour de jeu ?",
-					"Jouer plus tard",
-					JOptionPane.PLAIN_MESSAGE,
-					null,
-					null,
-					"");
-				if ((s != null) && (s.length() > 0)) {
-					int i=Integer.parseInt(s);
-					mha.parser("decaletour "+i);
-				}
-				return;
-			case 7: s = (String)JOptionPane.showInputDialog(gui,
-					"De combien de minutes voulez-vous décaler votre DLA ?",
-					"Décalage de DLA",
-					JOptionPane.PLAIN_MESSAGE,
-					null,
-					null,
-					"");
-				if ((s != null) && (s.length() > 0)) {
-					int i=Integer.parseInt(s);
-					mha.parser("decaledla "+i);
-				}
-				return;
+		case 0: return;
+		case 1: dialogDeplacement("deplace ");return;
+		case 2: dialogTrollCible("Attaquer :","attaque ");return;
+		case 3: dialogTrollPopo(false);return;
+		case 4: String s1 = (String)JOptionPane.showInputDialog(gui,
+				"Pendant combien de PA voulez-vous vous concentrer ?",
+				"Se concentrer",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				null,
+				"");
+		if ((s1 != null) && (s1.length() > 0)) {
+			popNext=true;
+			mha.parser("concentre "+s1);
+		}
+		return;
+		case 5: mha.parser("enddla");dlaActive=false;return;
+		case 6: s = (String)JOptionPane.showInputDialog(gui,
+				"Dans combien de minutes voulez-vous finir votre tour de jeu ?",
+				"Jouer plus tard",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				null,
+				"");
+		if ((s != null) && (s.length() > 0)) {
+			int i=Integer.parseInt(s);
+			mha.parser("decaletour "+i);
+		}
+		return;
+		case 7: s = (String)JOptionPane.showInputDialog(gui,
+				"De combien de minutes voulez-vous décaler votre DLA ?",
+				"Décalage de DLA",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				null,
+				"");
+		if ((s != null) && (s.length() > 0)) {
+			int i=Integer.parseInt(s);
+			mha.parser("decaledla "+i);
+		}
+		return;
 		}
 		for(int i=0;i<Troll.NOM_COMP.length;i++)
 		{
@@ -2073,12 +2166,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			else if(id==2)
 			{
 				String s1 = (String)JOptionPane.showInputDialog(gui,
-					"De combien de point de vie voulez vous accélérer ?",
-					"Accélérer",
-					JOptionPane.PLAIN_MESSAGE,
-					null,
-					null,
-					"");
+						"De combien de point de vie voulez vous accélérer ?",
+						"Accélérer",
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						null,
+						"");
 				if ((s1 != null) && (s1.length() > 0)) {
 					popNext=true;
 					mha.parser("comp 3 "+s1);
@@ -2115,15 +2208,16 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			else if(id==18)
 				dialogTrollSacro("sort 19 ");
 			return;
-		}		
+		}
 		return;
 	}
-	
+
 	private void lowLevelDialog(final JDialog dialog,JLabel label,JButton closeButton, JComboBox combo)
 	{
 		JPanel closePanel = new JPanel();
 		JButton otherButton = new JButton("Annuler");
 		otherButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dialog.setVisible(false);
 				dialog.dispose();
@@ -2139,7 +2233,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.PAGE_AXIS));
 		contentPane.add(Box.createVerticalGlue());
-		
+
 		contentPane.add(closePanel);
 		contentPane.add(Box.createVerticalStrut(5));
 		closePanel = new JPanel();
@@ -2159,7 +2253,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		dialog.setLocationRelativeTo(gui);
 		dialog.setVisible(true);
 	}
-	
+
 	private void dialogAllVisibleTroll(String s1, String s2)
 	{
 		final String s=s2;
@@ -2173,6 +2267,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		JButton closeButton = new JButton("Action");
 		closeButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(combo.getSelectedIndex()==0)
 					return;
@@ -2184,7 +2279,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		});
 		lowLevelDialog(dialog,label,closeButton,combo);
 	}
-	
+
 	private void dialogAllTroll(String s1, String s2)
 	{
 		final String s=s2;
@@ -2198,6 +2293,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		JButton closeButton = new JButton("Action");
 		closeButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(combo.getSelectedIndex()==0)
 					return;
@@ -2208,8 +2304,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			}
 		});
 		lowLevelDialog(dialog,label,closeButton,combo);
-	}	
-	
+	}
+
 	private void dialogTrollSacro(final String s)
 	{
 		final JDialog dialog = new JDialog(gui,"Action");
@@ -2226,6 +2322,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		JButton closeButton = new JButton("Action");
 		closeButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(combo.getSelectedIndex()==0)
 					return;
@@ -2235,9 +2332,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				mha.parser(s+((String) combo.getSelectedItem()).substring(((String) combo.getSelectedItem()).lastIndexOf("(")+1,((String) combo.getSelectedItem()).lastIndexOf(")"))+" "+nb.getText());
 			}
 		});
-				JPanel closePanel = new JPanel();
+		JPanel closePanel = new JPanel();
 		JButton otherButton = new JButton("Annuler");
 		otherButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dialog.setVisible(false);
 				dialog.dispose();
@@ -2248,7 +2346,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		combo.setMinimumSize(new Dimension(200, 25));
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.LINE_AXIS));
-		contentPane.add(Box.createHorizontalGlue());	
+		contentPane.add(Box.createHorizontalGlue());
 		contentPane.add(otherButton);
 		contentPane.add(Box.createHorizontalStrut(20));
 		contentPane.add(new JLabel("Soigner "));
@@ -2292,6 +2390,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			}
 		JButton closeButton = new JButton("Action");
 		closeButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(combo.getSelectedIndex()==0 || combo2.getSelectedIndex()==0)
 					return;
@@ -2315,9 +2414,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				}
 			}
 		});
-				JPanel closePanel = new JPanel();
+		JPanel closePanel = new JPanel();
 		JButton otherButton = new JButton("Annuler");
 		otherButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dialog.setVisible(false);
 				dialog.dispose();
@@ -2328,7 +2428,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			combo2.addItem("["+potions.elementAt(i)[0]+"] "+potions.elementAt(i)[4]);
 		if(!isLdP)
 			for(int i=0;i<parchemins.size();i++)
-				combo2.addItem("["+parchemins.elementAt(i)[0]+"] "+parchemins.elementAt(i)[4]);	
+				combo2.addItem("["+parchemins.elementAt(i)[0]+"] "+parchemins.elementAt(i)[4]);
 		combo.setPreferredSize(new Dimension(200, 25));
 		combo.setMaximumSize(new Dimension(300, 25));
 		combo.setMinimumSize(new Dimension(200, 25));
@@ -2337,7 +2437,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		combo2.setMinimumSize(new Dimension(200, 25));
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.LINE_AXIS));
-		contentPane.add(Box.createHorizontalGlue());	
+		contentPane.add(Box.createHorizontalGlue());
 		contentPane.add(otherButton);
 		contentPane.add(Box.createHorizontalStrut(5));
 		if(isLdP)
@@ -2375,6 +2475,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		JButton closeButton = new JButton("Action");
 		closeButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(combo.getSelectedIndex()==0)
 					return;
@@ -2385,112 +2486,115 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			}
 		});
 		lowLevelDialog(dialog,label,closeButton,combo);
-	}	
-	
+	}
+
 	private void dialogTrollCible(String s1, String s2,int dh,int dv)
 	{
-	try
-	{
-		final String s=s2;
-		final JDialog dialog = new JDialog(gui,"Action");
-		JLabel label = new JLabel(s1);
-		int x=((Integer) tableVue.getModel().getValueAt(0,5));
-		int y=((Integer) tableVue.getModel().getValueAt(0,6));
-		int n=((Integer) tableVue.getModel().getValueAt(0,7));
-		final JComboBox combo=new JComboBox();
-		combo.addItem("*** Choisissez une cible ***");
-		for(int i=1;i<tableVue.getModel().getRowCount();i++)
+		try
 		{
-			if(((Integer) tableVue.getModel().getValueAt(i,0))>dh)
-				break;
-			if(Math.max(Math.abs(x-((Integer) tableVue.getModel().getValueAt(i,5))),Math.abs(y-((Integer) tableVue.getModel().getValueAt(i,6))))<= dh && 
-				Math.abs(n-((Integer) tableVue.getModel().getValueAt(i,7)))<=dv)
-				combo.addItem(tableVue.getModel().getValueAt(i,2)+" ("+tableVue.getModel().getValueAt(i,1)+")");
-		}
-		JButton closeButton = new JButton("Action");
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(combo.getSelectedIndex()==0)
-					return;
-				dialog.setVisible(false);
-				dialog.dispose();
-				String tmp=(String) combo.getSelectedItem();
-				tmp=tmp.substring(tmp.lastIndexOf("(")+1,tmp.lastIndexOf(")"));
-				popNext=true;
-				mha.parser(s+tmp);
+			final String s=s2;
+			final JDialog dialog = new JDialog(gui,"Action");
+			JLabel label = new JLabel(s1);
+			int x=((Integer) tableVue.getModel().getValueAt(0,5));
+			int y=((Integer) tableVue.getModel().getValueAt(0,6));
+			int n=((Integer) tableVue.getModel().getValueAt(0,7));
+			final JComboBox combo=new JComboBox();
+			combo.addItem("*** Choisissez une cible ***");
+			for(int i=1;i<tableVue.getModel().getRowCount();i++)
+			{
+				if(((Integer) tableVue.getModel().getValueAt(i,0))>dh)
+					break;
+				if(Math.max(Math.abs(x-((Integer) tableVue.getModel().getValueAt(i,5))),Math.abs(y-((Integer) tableVue.getModel().getValueAt(i,6))))<= dh &&
+						Math.abs(n-((Integer) tableVue.getModel().getValueAt(i,7)))<=dv)
+					combo.addItem(tableVue.getModel().getValueAt(i,2)+" ("+tableVue.getModel().getValueAt(i,1)+")");
 			}
-		});
-		lowLevelDialog(dialog,label,closeButton,combo);
+			JButton closeButton = new JButton("Action");
+			closeButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(combo.getSelectedIndex()==0)
+						return;
+					dialog.setVisible(false);
+					dialog.dispose();
+					String tmp=(String) combo.getSelectedItem();
+					tmp=tmp.substring(tmp.lastIndexOf("(")+1,tmp.lastIndexOf(")"));
+					popNext=true;
+					mha.parser(s+tmp);
+				}
+			});
+			lowLevelDialog(dialog,label,closeButton,combo);
+		}
+		catch(Exception e) {e.printStackTrace();}
 	}
-	catch(Exception e) {e.printStackTrace();}
-	}
-	
+
 	private void dialogChooseTeam(Vector <Color> vc)
 	{
-	try
-	{
-		final JDialog dialog = new JDialog(gui,"Choix de l'équipe");
-		JLabel label = new JLabel("Sélection de votre équipe :");
-		final JComboBox combo=new JComboBox();
-		combo.addItem("*** Choisissez une équipe ***");
-		combo.setRenderer(new ComboBoxRenderer());
-		for(int i=0;i<vc.size();i++)
+		try
 		{
-			combo.addItem(vc.elementAt(i));
-		}
-		JButton closeButton = new JButton("Choisir");
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(combo.getSelectedIndex()==0)
+			final JDialog dialog = new JDialog(gui,"Choix de l'équipe");
+			JLabel label = new JLabel("Sélection de votre équipe :");
+			final JComboBox combo=new JComboBox();
+			combo.addItem("*** Choisissez une équipe ***");
+			combo.setRenderer(new ComboBoxRenderer());
+			for(int i=0;i<vc.size();i++)
+			{
+				combo.addItem(vc.elementAt(i));
+			}
+			JButton closeButton = new JButton("Choisir");
+			closeButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(combo.getSelectedIndex()==0)
+						return ;
+					dialog.setVisible(false);
+					dialog.dispose();
+					mha.parser("setteam "+(combo.getSelectedIndex()-1));
 					return ;
-				dialog.setVisible(false);
-				dialog.dispose();
-				mha.parser("setteam "+(combo.getSelectedIndex()-1));
-				return ;
-			}
-		});
-		JPanel closePanel = new JPanel();
-		JButton otherButton = new JButton("Annuler");
-		otherButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dialog.setVisible(false);
-				dialog.dispose();
-				return ;
-			}
-		});
-		combo.setPreferredSize(new Dimension(200, 25));
-		combo.setMaximumSize(new Dimension(200, 25));
-		combo.setMinimumSize(new Dimension(200, 25));
-		closePanel.setLayout(new BoxLayout(closePanel,BoxLayout.LINE_AXIS));
-		closePanel.add(Box.createHorizontalGlue());
-		closePanel.add(label);
-		closePanel.add(Box.createHorizontalGlue());
-		JPanel contentPane = new JPanel();
-		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.PAGE_AXIS));
-		contentPane.add(Box.createVerticalGlue());
-		
-		contentPane.add(closePanel);
-		contentPane.add(Box.createVerticalStrut(5));
-		closePanel = new JPanel();
-		closePanel.setLayout(new BoxLayout(closePanel,BoxLayout.LINE_AXIS));
-		closePanel.add(Box.createHorizontalGlue());
-		closePanel.add(otherButton);
-		closePanel.add(Box.createHorizontalStrut(5));
-		closePanel.add(combo);
-		closePanel.add(Box.createHorizontalStrut(5));
-		closePanel.add(closeButton);
-		closePanel.add(Box.createHorizontalGlue());
-		contentPane.add(closePanel);
-		contentPane.add(Box.createVerticalGlue());
-		contentPane.setOpaque(true);
-		dialog.setContentPane(contentPane);
-		dialog.setSize(new Dimension(400, 100));
-		dialog.setLocationRelativeTo(gui);
-		dialog.setVisible(true);
+				}
+			});
+			JPanel closePanel = new JPanel();
+			JButton otherButton = new JButton("Annuler");
+			otherButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dialog.setVisible(false);
+					dialog.dispose();
+					return ;
+				}
+			});
+			combo.setPreferredSize(new Dimension(200, 25));
+			combo.setMaximumSize(new Dimension(200, 25));
+			combo.setMinimumSize(new Dimension(200, 25));
+			closePanel.setLayout(new BoxLayout(closePanel,BoxLayout.LINE_AXIS));
+			closePanel.add(Box.createHorizontalGlue());
+			closePanel.add(label);
+			closePanel.add(Box.createHorizontalGlue());
+			JPanel contentPane = new JPanel();
+			contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.PAGE_AXIS));
+			contentPane.add(Box.createVerticalGlue());
+
+			contentPane.add(closePanel);
+			contentPane.add(Box.createVerticalStrut(5));
+			closePanel = new JPanel();
+			closePanel.setLayout(new BoxLayout(closePanel,BoxLayout.LINE_AXIS));
+			closePanel.add(Box.createHorizontalGlue());
+			closePanel.add(otherButton);
+			closePanel.add(Box.createHorizontalStrut(5));
+			closePanel.add(combo);
+			closePanel.add(Box.createHorizontalStrut(5));
+			closePanel.add(closeButton);
+			closePanel.add(Box.createHorizontalGlue());
+			contentPane.add(closePanel);
+			contentPane.add(Box.createVerticalGlue());
+			contentPane.setOpaque(true);
+			dialog.setContentPane(contentPane);
+			dialog.setSize(new Dimension(400, 100));
+			dialog.setLocationRelativeTo(gui);
+			dialog.setVisible(true);
+		}
+		catch(Exception e) {e.printStackTrace();}
 	}
-	catch(Exception e) {e.printStackTrace();}
-	}
-	
+
 	private void dialogDeplacement(final String s)
 	{
 		try
@@ -2501,26 +2605,28 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			final ButtonGroup groupX = new ButtonGroup();
 			final ButtonGroup groupY = new ButtonGroup();
 			final ButtonGroup groupN = new ButtonGroup();
-			
+
 			final JDialog dialog = new JDialog(gui,"Déplacement");
-			
+
 			JButton closeButton = new JButton("Action");
 			closeButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dialog.setVisible(false);
 					dialog.dispose();
 					popNext=true;
 					mha.parser(s+groupX.getSelection().getActionCommand()+" "+groupY.getSelection().getActionCommand()+" "+groupN.getSelection().getActionCommand());
-				}	
+				}
 			});
 			JButton otherButton = new JButton("Annuler");
 			otherButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dialog.setVisible(false);
 					dialog.dispose();
 				}
 			});
-		
+
 			JRadioButton x0 = new JRadioButton("-1 ("+(x-1)+")");
 			x0.setActionCommand("-1");
 			if(x-1<0)
@@ -2535,7 +2641,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			groupX.add(x0);
 			groupX.add(x1);
 			groupX.add(x2);
-			
+
 			JRadioButton y0 = new JRadioButton("-1 ("+(y-1)+")");
 			y0.setActionCommand("-1");
 			if(y-1<0)
@@ -2550,7 +2656,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			groupY.add(y0);
 			groupY.add(y1);
 			groupY.add(y2);
-			
+
 			JRadioButton n0 = new JRadioButton("-1 ("+(n-1)+")");
 			n0.setActionCommand("-1");
 			if(n-1<-(size+1)/2)
@@ -2565,7 +2671,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			groupN.add(n0);
 			groupN.add(n1);
 			groupN.add(n2);
-			
+
 			JPanel tablePane =new JPanel();
 			tablePane.setLayout(new GridLayout(3,4,2,2));
 			tablePane.add(new JLabel("X ->"));
@@ -2580,11 +2686,11 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			tablePane.add(n0);
 			tablePane.add(n1);
 			tablePane.add(n2);
-			
+
 			JPanel contentPane = new JPanel();
 			contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.LINE_AXIS));
 			contentPane.add(Box.createHorizontalGlue());
-		
+
 			contentPane.add(otherButton);
 			contentPane.add(Box.createHorizontalStrut(5));
 			contentPane.add(tablePane);
@@ -2599,10 +2705,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		catch(Exception e) {e.printStackTrace();}
 	}
-	
-	
-	
-	
+
+
+
+
 	private void dialogCase(String s1,final String s2)
 	{
 		try
@@ -2610,30 +2716,32 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			final JTextField x=new JTextField(3);
 			final JTextField y=new JTextField(3);
 			final JTextField n=new JTextField(3);
-			
+
 			x.setMaximumSize(new Dimension(30,20));
 			y.setMaximumSize(new Dimension(30,20));
 			n.setMaximumSize(new Dimension(30,20));
-			
+
 			final JDialog dialog = new JDialog(gui,"Action");
-			
+
 			JButton closeButton = new JButton("Action");
 			closeButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dialog.setVisible(false);
 					dialog.dispose();
 					popNext=true;
 					mha.parser(s2+x.getText()+" "+y.getText()+" "+n.getText());
-				}	
+				}
 			});
 			JButton otherButton = new JButton("Annuler");
 			otherButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dialog.setVisible(false);
 					dialog.dispose();
 				}
 			});
-			
+
 			JPanel tablePane =new JPanel();
 			tablePane.setLayout(new BoxLayout(tablePane,BoxLayout.LINE_AXIS));
 			tablePane.add(Box.createHorizontalGlue());
@@ -2653,7 +2761,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			tablePane.add(Box.createHorizontalStrut(10));
 			tablePane.add(closeButton);
 			tablePane.add(Box.createHorizontalGlue());
-			
+
 			JPanel contentPane = new JPanel();
 			contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.PAGE_AXIS));
 			contentPane.add(Box.createVerticalGlue());
@@ -2669,7 +2777,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 		catch(Exception e) {e.printStackTrace();}
 	}
-			
+
 	/**
 	 * Submits input to parser if neccessary
 	 * @param input The string that is checked
@@ -2698,10 +2806,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 	}
 
-	
+
 	private void updateProfil(String s)
 	{
-		try 
+		try
 		{
 			InfoTroll it=null;
 			String [] ls=s.split(";");
@@ -2712,43 +2820,43 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					break;
 				}
 			String pro="<html>"+
-				"<h2 align=\"center\"><b>MON PROFIL</b></h2>"+
-				"<center>"+
-				"<table align=\"center\" border=\"1\" cellpadding=\"5\" cellspacing=\"1\">"+
-				"  <tr > "+
-				"    <td valign=\"top\" width=\"150\"><b>Description</b></td>"+
-				"    <td valign=\"top\"> Identifiants..............: "+it.getId()+" - "+it.getNom()+"<br>Race........................: "+it.getRace()+" <br></td>"+
-				"  </tr>"+
-				"  <tr> "+
-				"    <td valign=\"top\"><b>Echéance du Tour</b></td>"+
-				"    <td valign=\"top\">Date Limite d'Action : <b> "+hour2string(Integer.parseInt(ls[0]))+" </b><br>Il me reste <b> "+nbPA+" PA</b> sur un total de 6 "+
-				"       <p>Durée normale de mon Tour.............: "+Troll.convertTime(Integer.parseInt(ls[1]))+" <br>"+
-				"          Bonus/Malus sur la durée.................: "+Troll.convertTime(Integer.parseInt(ls[2]))+".<br>"+
-				"          Augmentation due aux blessures.......: "+Troll.convertTime(Integer.parseInt(ls[3]))+" <br>"+
-				"          Poids de l'équipement......................: "+Troll.convertTime(Integer.parseInt(ls[4]))+".<br></p><p>"+
-				"          <b>Durée de mon prochain Tour.....: "+
+					"<h2 align=\"center\"><b>MON PROFIL</b></h2>"+
+					"<center>"+
+					"<table align=\"center\" border=\"1\" cellpadding=\"5\" cellspacing=\"1\">"+
+					"  <tr > "+
+					"    <td valign=\"top\" width=\"150\"><b>Description</b></td>"+
+					"    <td valign=\"top\"> Identifiants..............: "+it.getId()+" - "+it.getNom()+"<br>Race........................: "+it.getRace()+" <br></td>"+
+					"  </tr>"+
+					"  <tr> "+
+					"    <td valign=\"top\"><b>Echéance du Tour</b></td>"+
+					"    <td valign=\"top\">Date Limite d'Action : <b> "+hour2string(Integer.parseInt(ls[0]))+" </b><br>Il me reste <b> "+nbPA+" PA</b> sur un total de 6 "+
+					"       <p>Durée normale de mon Tour.............: "+Troll.convertTime(Integer.parseInt(ls[1]))+" <br>"+
+					"          Bonus/Malus sur la durée.................: "+Troll.convertTime(Integer.parseInt(ls[2]))+".<br>"+
+					"          Augmentation due aux blessures.......: "+Troll.convertTime(Integer.parseInt(ls[3]))+" <br>"+
+					"          Poids de l'équipement......................: "+Troll.convertTime(Integer.parseInt(ls[4]))+".<br></p><p>"+
+					"          <b>Durée de mon prochain Tour.....: "+
 					Troll.convertTime(Math.max(Integer.parseInt(ls[1]),Integer.parseInt(ls[1])+Integer.parseInt(ls[2])+Integer.parseInt(ls[3])+Integer.parseInt(ls[4])))+".</b>"+
-				"       </p>"+
-				"    </td>"+
-				"  </tr>"+
-				"  <tr> "+
-				"    <td valign=\"top\"><b>Position</b></td>"+
-				"    <td valign=\"top\">X = "+ls[5]+" | Y = "+ls[6]+" | N = "+ls[7]+"<br>Vue.......: "+ls[8]+" Cases "+pm(ls[9])+" <br>";
-			if(ls.length>33 && ls[32].equals("1"))
+					"       </p>"+
+					"    </td>"+
+					"  </tr>"+
+					"  <tr> "+
+					"    <td valign=\"top\"><b>Position</b></td>"+
+					"    <td valign=\"top\">X = "+ls[5]+" | Y = "+ls[6]+" | N = "+ls[7]+"<br>Vue.......: "+ls[8]+" Cases "+pm(ls[9])+" <br>";
+			if(ls.length>33 && ls[33].equals("1"))
 				pro+="<B><FONT COLOR=\"#FF0000\">[Camouflé]</FONT></B><br>";
-			if(ls.length>34 && ls[33].equals("1"))
+			if(ls.length>34 && ls[34].equals("1"))
 				pro+="<B><FONT COLOR=\"#FF0000\">[Invisible]</FONT></B><br>";
 			pro+=	"</td>"+
-				"  </tr>"+
-				"  <tr> "+
-				"    <td valign=\"top\"><b>Expérience</b></td>"+
-				"    <td valign=\"top\"> Niveau........: "+ls[10]+"</td>"+
-				"  </tr>"+
-				"  <tr> "+
-				"    <td valign=\"top\"><b>Point de Vie</b></td>"+
-				"    <td valign=\"top\"> "+
-				"      Actuels............: <b> "+ls[11]+" </b><br>"+
-				"      Maximum.........: "+ls[12]+"<br>";
+					"  </tr>"+
+					"  <tr> "+
+					"    <td valign=\"top\"><b>Expérience</b></td>"+
+					"    <td valign=\"top\"> Niveau........: "+ls[10]+"</td>"+
+					"  </tr>"+
+					"  <tr> "+
+					"    <td valign=\"top\"><b>Point de Vie</b></td>"+
+					"    <td valign=\"top\"> "+
+					"      Actuels............: <b> "+ls[11]+" </b><br>"+
+					"      Maximum.........: "+ls[12]+"<br>";
 			if(Integer.parseInt(ls[11])<=0)
 				dead=true;
 			if(it.getRaceById()==2)
@@ -2760,40 +2868,40 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					pro+="      Fatigue du Kastar : "+f+" (1 PV = "+((120/((f/10+1)*f)))+"')<br>";
 			}
 			pro+="      Régénération....: "+ls[13]+" D3 "+ls[14]+" (moyenne : "+(2*Integer.parseInt(ls[13])+Integer.parseInt(ls[14].split("/")[0].replaceAll("\\+", ""))+Integer.parseInt(ls[14].split("/")[1].replaceAll("\\+", "")))+")"+
-				"    </td>"+
-				"  </tr>"+
-				"  <tr>"+
-				"    <td valign=\"top\"><b>Combat</b></td>"+
-				"    <td valign=\"top\">Attaque.....: "+ls[16]+" D6 "+ls[17]+" (moyenne : "+(7*Integer.parseInt(ls[16])/2+Integer.parseInt(ls[17].split("/")[0].replaceAll("\\+", "")))+")<br>"+
-				"      Esquive.....: "+ls[18]+" D6 "+ls[19]+" (moyenne : "+(7*Integer.parseInt(ls[18])/2+Integer.parseInt(ls[19].split("/")[0].replaceAll("\\+", ""))+Integer.parseInt(ls[19].split("/")[1].replaceAll("\\+", "")))+")<br>"+
-				"      Dégâts.......: "+ls[20]+" D3 "+ls[21]+" (moyenne : "+(2*Integer.parseInt(ls[20])+Integer.parseInt(ls[21].split("/")[0].replaceAll("\\+", "")))+")<br>"+
-				"      Armure......: "+ls[22]+" "+pm(ls[23])+" <br> "+
-				"      Nb d'Attaques subies ce Tour................: "+ls[24]+"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Moyenne esquive : "+
-				Math.max(0,7*(Integer.parseInt(ls[18])-Integer.parseInt(ls[24]))/2+Integer.parseInt(ls[19].split("/")[0].replaceAll("\\+", ""))+Integer.parseInt(ls[19].split("/")[1].replaceAll("\\+", "")))+")"+
-				"    </td>"+
-				"  </tr>"+
-				"  <tr>"+
-				"    <td valign=\"top\"> <b>Action(s) Programmée(s)</b></td>";
-			if(Integer.parseInt(ls[25])+Integer.parseInt(ls[26])==0)
+					"    </td>"+
+					"  </tr>"+
+					"  <tr>"+
+					"    <td valign=\"top\"><b>Combat</b></td>"+
+					"    <td valign=\"top\">Attaque.....: "+ls[17]+" D6 "+ls[18]+" (moyenne : "+(7*Integer.parseInt(ls[17])/2+Integer.parseInt(ls[18].split("/")[0].replaceAll("\\+", "")))+")<br>"+
+					"      Esquive.....: "+ls[19]+" D6 "+ls[20]+" (moyenne : "+(7*Integer.parseInt(ls[19])/2+Integer.parseInt(ls[20].split("/")[0].replaceAll("\\+", ""))+Integer.parseInt(ls[20].split("/")[1].replaceAll("\\+", "")))+")<br>"+
+					"      Dégâts.......: "+ls[21]+" D3 "+ls[22]+" (moyenne : "+(2*Integer.parseInt(ls[21])+Integer.parseInt(ls[22].split("/")[0].replaceAll("\\+", "")))+")<br>"+
+					"      Armure......: " + ls[15] + " D3 " + "+"+ls[23]+" "+pm(ls[24])+" (moyenne : "+(2*Integer.parseInt(ls[15]) + Integer.parseInt(ls[23]) + Integer.parseInt(ls[24])) + ")<br>"+
+					"      Nb d'Attaques subies ce Tour................: "+ls[25]+"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Moyenne esquive : "+
+					Math.max(0,7*(Integer.parseInt(ls[19])-Integer.parseInt(ls[25]))/2+Integer.parseInt(ls[20].split("/")[0].replaceAll("\\+", ""))+Integer.parseInt(ls[20].split("/")[1].replaceAll("\\+", "")))+")"+
+					"    </td>"+
+					"  </tr>"+
+					"  <tr>"+
+					"    <td valign=\"top\"> <b>Action(s) Programmée(s)</b></td>";
+			if(Integer.parseInt(ls[26])+Integer.parseInt(ls[27])==0)
 				pro+="    <td valign=\"top\"> <b>Vous n'avez actuellement aucune Action Programmée</b></td>";
-			else if(Integer.parseInt(ls[25])*Integer.parseInt(ls[26])!=0)
-				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[25]+" parade(s) et "+ls[26]+" contre-attaque(s) programmées</b></td>";
-			else if(Integer.parseInt(ls[25])!=0)
-				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[25]+" parade(s) programmée(s)</b></td>";
+			else if(Integer.parseInt(ls[26])*Integer.parseInt(ls[27])!=0)
+				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[26]+" parade(s) et "+ls[27]+" contre-attaque(s) programmées</b></td>";
+			else if(Integer.parseInt(ls[26])!=0)
+				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[26]+" parade(s) programmée(s)</b></td>";
 			else
-				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[26]+" contre-attaque(s) programmée(s)</b></td>";
+				pro+="    <td valign=\"top\"> <b>Vous avez actuellement "+ls[27]+" contre-attaque(s) programmée(s)</b></td>";
 			pro+="  </tr>"+
-				"  <tr>"+
-				"    <td valign=\"top\"><b>Magie</b></td>"+
-				"    <td valign=\"top\">Résistance à la Magie...................: "+ls[27]+" "+pm((Integer.parseInt(ls[28])*Integer.parseInt(ls[27]))/100)+" (Total : "+
-					(Integer.parseInt(ls[27])+((Integer.parseInt(ls[28])*Integer.parseInt(ls[27]))/100))+")<br>"+
-				"      Maîtrise de la Magie....................: "+ls[29]+" "+pm((Integer.parseInt(ls[30])*Integer.parseInt(ls[29]))/100)+" (Total : "+
-					(Integer.parseInt(ls[29])+((Integer.parseInt(ls[30])*Integer.parseInt(ls[29]))/100))+")<br>"+
-				"      Bonus de Concentration : "+ls[31]+" % "+
-				"    </td>"+
-				"  </tr>"+
-				"</table></center>";
-				profil.setText(pro);
+					"  <tr>"+
+					"    <td valign=\"top\"><b>Magie</b></td>"+
+					"    <td valign=\"top\">Résistance à la Magie...................: "+ls[28]+" "+pm((Integer.parseInt(ls[29])*Integer.parseInt(ls[28]))/100)+" (Total : "+
+					(Integer.parseInt(ls[28])+((Integer.parseInt(ls[29])*Integer.parseInt(ls[28]))/100))+")<br>"+
+					"      Maîtrise de la Magie....................: "+ls[30]+" "+pm((Integer.parseInt(ls[30])*Integer.parseInt(ls[30]))/100)+" (Total : "+
+					(Integer.parseInt(ls[30])+((Integer.parseInt(ls[30])*Integer.parseInt(ls[30]))/100))+")<br>"+
+					"      Bonus de Concentration : "+ls[32]+" % "+
+					"    </td>"+
+					"  </tr>"+
+					"</table></center>";
+			profil.setText(pro);
 		}
 		catch(Exception e)
 		{
@@ -2802,175 +2910,175 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 	}
 
 	private String[] nomEquip = {"Armure","Bouclier","Casque","Arme à 1 main","Talisman","Bottes","Bidouille","Anneau","Bric à Brac","Arme à deux mains","Composant","Parchemin",
-		"Potion","Tarot","Champignon","Minerai"};
-	
+			"Potion","Tarot","Champignon","Minerai"};
+
 	private String pm(int i)
 	{
 		if(i>=0)
 			return "+"+i;
 		return ""+i;
 	}
-	
+
 	private String pm(String s)
 	{
-		
+
 		if(s.substring(0,1).equals("-"))
 			return s;
 		return "+"+s;
 	}
-		
+
 	private void updateEquip(String s)
 	{
 		try
 		{
-		int torse=-1,mainGauche=-1,mainDroite=-1,tete=-1,cou=-1,pieds=-1;
-		String []ls=s.split("\n");
-		String [][]lss=new String[ls.length] [];
-		Vector<String []> [] lv=new Vector[16];
-		for(int i=0;i<lv.length;i++)
-			lv[i]=new Vector<String []>();
-		for(int i=0;i<ls.length;i++)
-		{
-			if(ls[i].length()==0)
-				continue;
-			lss[i]=ls[i].split(";");
-			if(lss[i].length<5)
-				continue;
-			for(int j=5;j<lss[i].length;j++)
-				lss[i][4]+=";"+lss[i][j];
-			int type=Integer.parseInt(lss[i][1]);
-			if(type==Equipement.ARMURE && lss[i][2].equals("1"))
-				torse=i;
-			else if(type==Equipement.BOUCLIER && lss[i][2].equals("1"))
-				mainGauche=i;
-			else if(type==Equipement.CASQUE && lss[i][2].equals("1"))
-				tete=i;
-			else if(type==Equipement.ARME_1_MAIN && lss[i][2].equals("1"))
-				mainDroite=i;
-			else if(type==Equipement.TALISMAN && lss[i][2].equals("1"))
-				cou=i;
-			else if(type==Equipement.BOTTES && lss[i][2].equals("1"))
-				pieds=i;
-			else if(type==Equipement.ARME_2_MAINS && lss[i][2].equals("1"))
-			{	mainDroite=i;mainGauche=i; }
-			else
-				lv[type].add(lss[i]);
-		}
-		String stringEquip = "<html><center>"+
-			"<h2>MON ÉQUIPEMENT</h2>"+
-			"	<table align=\"center\" border=\"1\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
-			"		<tr height=\"18\"> "+
-			"			<td colspan=\"3\" align=\"center\" height=\"18\" valign=\"top\" width=\"327\"><b>Tête</b></td>"+
-			"		</tr>"+
-			"		<tr> "+
-			"		<td colspan=\"3\" align=\"center\" height=\"19\" valign=\"top\">";
-		if(tete!=-1)
-			stringEquip+="["+lss[tete][0]+"] "+lss[tete][4]+"<br><b>"+lss[tete][3]+"</b>";
-		stringEquip+="		</td>"+
-			"	</tr>"+
-			"	<tr>"+
-			"		<td colspan=\"3\" class=\"TitreEqTable\" align=\"center\" height=\"21\" valign=\"top\"><b>Cou</b></td>"+
-			"			</tr>"+
-			"			<tr> "+
-			"				<td colspan=\"3\" align=\"center\" height=\"48\" valign=\"top\"> ";
-		if(cou!=-1)
-			stringEquip+="["+lss[cou][0]+"] "+lss[cou][4]+"<br><b>"+lss[cou][3]+"</b>";
-		stringEquip+="</td>"+
-			"			</tr>"+
-			"			<tr> "+
-			"				<td align=\"center\" height=\"21\" valign=\"top\" width=\"97\"><b>Main droite</b></td>"+
-			"				<td align=\"center\" valign=\"top\" width=\"116\"><b>Torse</b></td>"+
-			"				<td align=\"center\" valign=\"top\" width=\"97\"><b>Main gauche</b></td>"+
-			"			</tr>"+
-			"			<tr> "+
-			"				<td align=\"center\" height=\"181\" valign=\"top\" width=\"33%\"> ";			
-			
-		if(mainDroite!=-1)
-		{
-			stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
-				"	<tr><td align=\"center\">"+lss[mainDroite][0]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr>"+
-				"	<tr><td align=\"center\">"+lss[mainDroite][4]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
-			String [] t=lss[mainDroite][3].split(" \\| ");
-			for(int i=0;i<t.length;i++)
-				stringEquip+="<li>"+t[i]+"</li>";
-			stringEquip+="</td></tr></table>";
-		}
-		stringEquip+=
-			"				</td>"+
-			"				<td align=\"center\" valign=\"top\" width=\"33%\"> ";
-		if(torse!=-1)
-		{
-			stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
-				"	<tr><td align=\"center\">"+lss[torse][0]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr>"+
-				"	<tr><td align=\"center\">"+lss[torse][4]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
-			String [] t=lss[torse][3].split(" \\| ");
-			for(int i=0;i<t.length;i++)
-				stringEquip+="<li>"+t[i]+"</li>";
-			stringEquip+="</td></tr></table>";
-		}
-		stringEquip+=
-			"				</td>"+
-			"				<td align=\"center\" valign=\"top\" width=\"33%\">";
-		if(mainGauche!=-1)
-		{
-			stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
-				"	<tr><td align=\"center\">"+lss[mainGauche][0]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr>"+
-				"	<tr><td align=\"center\">"+lss[mainGauche][4]+"</td></tr>"+
-				"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
-			String [] t=lss[mainGauche][3].split(" \\| ");
-			for(int i=0;i<t.length;i++)
-				stringEquip+="<li>"+t[i]+"</li>";
-			stringEquip+="</td></tr></table>";
-		}
-		stringEquip+=
-			"				</td>"+
-			"			</tr>"+
-			"			<tr><td colspan=\"3\" align=\"center\" height=\"22\" valign=\"top\"><b>Pieds</b></td></tr>"+
-			"			<tr> "+
-			"				<td colspan=\"3\" align=\"center\" height=\"97\" valign=\"top\"> ";
-		if(pieds!=-1)
-			stringEquip+="["+lss[pieds][0]+"] "+lss[pieds][4]+"<br><b>"+lss[pieds][3]+"</b>";
-		stringEquip+=
-			"				</td>"+
-			"			</tr>"+
-			"		</table>"+
-			"	</td>"+
-			"</tr>"+
-			"<tr height=\"18\"><td align=\"center\" valign=\"top\"><b>Equipement</b></td></tr>"+
-			"<tr> "+
-			"	<td valign=\"top\"> "+
-			"		<table class=\"mh_tdpage\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
-		for(int i=0;i<lv.length;i++)
-		{
-			if(lv[i].size()==0)
-				continue;
-			stringEquip+="<tr><td colspan=\"2\" align=\"left\" valign=\"top\"><b>"+nomEquip[i]+"</b></td></tr>";
-			for(int j=0;j<lv[i].size();j++)
-			{
-				stringEquip+="<tr><td align=\"left\" valign=\"top\" width=\"20\"></td>"+
-					"<td align=\"left\" valign=\"top\"><li>["+lv[i].elementAt(j)[0]+"] "+lv[i].elementAt(j)[4]+"<br>"+lv[i].elementAt(j)[3]+"</li></td></tr>";
-			}
-		}
-		stringEquip+="		</table>"+
-			"	</td>"+
-			"</tr>"+
-			"</table>"+
-			"</center>";
-		equipement.setText(stringEquip);
-		parchemins=lv[11];
-		potions=lv[12];
+			int torse=-1,mainGauche=-1,mainDroite=-1,tete=-1,cou=-1,pieds=-1;
+			String []ls=s.split("\n");
+			String [][]lss=new String[ls.length] [];
+			Vector<String []> [] lv=new Vector[16];
+			for(int i=0;i<lv.length;i++)
+				lv[i]=new Vector<String []>();
+				for(int i=0;i<ls.length;i++)
+				{
+					if(ls[i].length()==0)
+						continue;
+					lss[i]=ls[i].split(";");
+					if(lss[i].length<5)
+						continue;
+					for(int j=5;j<lss[i].length;j++)
+						lss[i][4]+=";"+lss[i][j];
+					int type=Integer.parseInt(lss[i][1]);
+					if(type==Equipement.ARMURE && lss[i][2].equals("1"))
+						torse=i;
+					else if(type==Equipement.BOUCLIER && lss[i][2].equals("1"))
+						mainGauche=i;
+					else if(type==Equipement.CASQUE && lss[i][2].equals("1"))
+						tete=i;
+					else if(type==Equipement.ARME_1_MAIN && lss[i][2].equals("1"))
+						mainDroite=i;
+					else if(type==Equipement.TALISMAN && lss[i][2].equals("1"))
+						cou=i;
+					else if(type==Equipement.BOTTES && lss[i][2].equals("1"))
+						pieds=i;
+					else if(type==Equipement.ARME_2_MAINS && lss[i][2].equals("1"))
+					{	mainDroite=i;mainGauche=i; }
+					else
+						lv[type].add(lss[i]);
+				}
+				String stringEquip = "<html><center>"+
+						"<h2>MON ÉQUIPEMENT</h2>"+
+						"	<table align=\"center\" border=\"1\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
+						"		<tr height=\"18\"> "+
+						"			<td colspan=\"3\" align=\"center\" height=\"18\" valign=\"top\" width=\"327\"><b>Tête</b></td>"+
+						"		</tr>"+
+						"		<tr> "+
+						"		<td colspan=\"3\" align=\"center\" height=\"19\" valign=\"top\">";
+				if(tete!=-1)
+					stringEquip+="["+lss[tete][0]+"] "+lss[tete][4]+"<br><b>"+lss[tete][3]+"</b>";
+				stringEquip+="		</td>"+
+						"	</tr>"+
+						"	<tr>"+
+						"		<td colspan=\"3\" class=\"TitreEqTable\" align=\"center\" height=\"21\" valign=\"top\"><b>Cou</b></td>"+
+						"			</tr>"+
+						"			<tr> "+
+						"				<td colspan=\"3\" align=\"center\" height=\"48\" valign=\"top\"> ";
+				if(cou!=-1)
+					stringEquip+="["+lss[cou][0]+"] "+lss[cou][4]+"<br><b>"+lss[cou][3]+"</b>";
+				stringEquip+="</td>"+
+						"			</tr>"+
+						"			<tr> "+
+						"				<td align=\"center\" height=\"21\" valign=\"top\" width=\"97\"><b>Main droite</b></td>"+
+						"				<td align=\"center\" valign=\"top\" width=\"116\"><b>Torse</b></td>"+
+						"				<td align=\"center\" valign=\"top\" width=\"97\"><b>Main gauche</b></td>"+
+						"			</tr>"+
+						"			<tr> "+
+						"				<td align=\"center\" height=\"181\" valign=\"top\" width=\"33%\"> ";
+
+				if(mainDroite!=-1)
+				{
+					stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
+							"	<tr><td align=\"center\">"+lss[mainDroite][0]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr>"+
+							"	<tr><td align=\"center\">"+lss[mainDroite][4]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
+					String [] t=lss[mainDroite][3].split(" \\| ");
+					for(int i=0;i<t.length;i++)
+						stringEquip+="<li>"+t[i]+"</li>";
+					stringEquip+="</td></tr></table>";
+				}
+				stringEquip+=
+						"				</td>"+
+								"				<td align=\"center\" valign=\"top\" width=\"33%\"> ";
+				if(torse!=-1)
+				{
+					stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
+							"	<tr><td align=\"center\">"+lss[torse][0]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr>"+
+							"	<tr><td align=\"center\">"+lss[torse][4]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
+					String [] t=lss[torse][3].split(" \\| ");
+					for(int i=0;i<t.length;i++)
+						stringEquip+="<li>"+t[i]+"</li>";
+					stringEquip+="</td></tr></table>";
+				}
+				stringEquip+=
+						"				</td>"+
+								"				<td align=\"center\" valign=\"top\" width=\"33%\">";
+				if(mainGauche!=-1)
+				{
+					stringEquip+="<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"+
+							"	<tr><td align=\"center\">"+lss[mainGauche][0]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr>"+
+							"	<tr><td align=\"center\">"+lss[mainGauche][4]+"</td></tr>"+
+							"	<tr><td height=\"10\"></td></tr><tr><td align=\"left\">";
+					String [] t=lss[mainGauche][3].split(" \\| ");
+					for(int i=0;i<t.length;i++)
+						stringEquip+="<li>"+t[i]+"</li>";
+					stringEquip+="</td></tr></table>";
+				}
+				stringEquip+=
+						"				</td>"+
+								"			</tr>"+
+								"			<tr><td colspan=\"3\" align=\"center\" height=\"22\" valign=\"top\"><b>Pieds</b></td></tr>"+
+								"			<tr> "+
+								"				<td colspan=\"3\" align=\"center\" height=\"97\" valign=\"top\"> ";
+				if(pieds!=-1)
+					stringEquip+="["+lss[pieds][0]+"] "+lss[pieds][4]+"<br><b>"+lss[pieds][3]+"</b>";
+				stringEquip+=
+						"				</td>"+
+								"			</tr>"+
+								"		</table>"+
+								"	</td>"+
+								"</tr>"+
+								"<tr height=\"18\"><td align=\"center\" valign=\"top\"><b>Equipement</b></td></tr>"+
+								"<tr> "+
+								"	<td valign=\"top\"> "+
+								"		<table class=\"mh_tdpage\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
+				for(int i=0;i<lv.length;i++)
+				{
+					if(lv[i].size()==0)
+						continue;
+					stringEquip+="<tr><td colspan=\"2\" align=\"left\" valign=\"top\"><b>"+nomEquip[i]+"</b></td></tr>";
+					for(int j=0;j<lv[i].size();j++)
+					{
+						stringEquip+="<tr><td align=\"left\" valign=\"top\" width=\"20\"></td>"+
+								"<td align=\"left\" valign=\"top\"><li>["+lv[i].elementAt(j)[0]+"] "+lv[i].elementAt(j)[4]+"<br>"+lv[i].elementAt(j)[3]+"</li></td></tr>";
+					}
+				}
+				stringEquip+="		</table>"+
+						"	</td>"+
+						"</tr>"+
+						"</table>"+
+						"</center>";
+				equipement.setText(stringEquip);
+				parchemins=lv[11];
+				potions=lv[12];
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void Commands() {
 
 		String commands="";
@@ -3004,79 +3112,86 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 
 	}
-	
+
 	public void openAbout() {
 
-		JOptionPane.showMessageDialog((Component) gui,
-                                    "Mountyhall Arena a été développé par \n"+
-                                    "Mini TilK (mini@tilk.info)\n"+
-                                    "Raistlin (raistlin@nerim.net)\n"+
-                                    "Les graphismes sont de \n"+
-                                    "Eidarloy \n"+
-                                    "Il est basé en partie sur jRisk :\n"+
-                                    "http://jrisk.sourceforge.net/\n"+
-                                    "et est sous license GPL\n\nVersion :"+version,
-                                    "A propos de Mountyhall Arena",
-                                    JOptionPane.INFORMATION_MESSAGE,
-                                    new ImageIcon(MHAGUI.class.getResource("mha.png")));
+		JOptionPane.showMessageDialog(gui,
+				"Mountyhall Arena a été développé par \n"+
+						"Mini TilK (mini@tilk.info)\n"+
+						"Raistlin (raistlin@nerim.net)\n"+
+						"Les graphismes sont de \n"+
+						"Eidarloy \n"+
+						"Il est basé en partie sur jRisk :\n"+
+						"http://jrisk.sourceforge.net/\n"+
+						"et est sous license GPL\n\nVersion :"+version,
+						"A propos de Mountyhall Arena",
+						JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(MHAGUI.class.getResource("mha.png")));
 	}
 	//**********************************************************************
 	//                     MouseListener Interface
 	//**********************************************************************
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 
 
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 	}
+	@Override
 	public void mouseMoved(MouseEvent e) {
 
 
 	}
-	
+
 	private boolean strcmp(String s,String s2)
 	{
 		if(s.length()>=s2.length() && s.substring(0,s2.length()).toLowerCase().equals(s2.toLowerCase()))
 			return true;
 		return false;
 	}
-	
+
 	private String extractString(String s,String s2)
 	{
 		if(!strcmp(s,s2))
 			return s;
 		return s.substring(s2.length());
 	}
-	
+
 	private String convertTime(int t)
 	{
 		if(t%60>9)
 			return (t/60)+":"+(t%60);
 		return (t/60)+":0"+(t%60);
 	}
-    
+
 	private String hour2string(int t)
 	{
 		return "Jour "+(t/(60*24)+1)+" à "+convertTime(t%(60*24));
 	}
-	
+
 	private void quickSort(Vector elements, int lowIndex, int highIndex)
-	{ 
+	{
 		int lowToHighIndex;
 		int highToLowIndex;
 		int pivotIndex;
@@ -3091,20 +3206,20 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		lowToHighIndex = lowIndex;
 		highToLowIndex = highIndex;
 		/** Choose a pivot, remember it's value
-		*  No special action for the pivot element itself.
-		*  It will be treated just like any other element.
-		*/
+		 *  No special action for the pivot element itself.
+		 *  It will be treated just like any other element.
+		 */
 		pivotIndex = (lowToHighIndex + highToLowIndex) / 2;
 		pivotValue = ((Integer) ((Object[]) elements.elementAt(pivotIndex))[0]);
-		
+
 		/** Split the Vector in two parts.
-		*
-		*  The lower part will be lowIndex - newHighIndex,
-		*  containing elements <= pivot Value
-		*
-		*  The higher part will be newLowIndex - highIndex,
-		*  containting elements >= pivot Value
-		*/
+		 *
+		 *  The lower part will be lowIndex - newHighIndex,
+		 *  containing elements <= pivot Value
+		 *
+		 *  The higher part will be newLowIndex - highIndex,
+		 *  containting elements >= pivot Value
+		 */
 		newLowIndex = highIndex + 1;
 		newHighIndex = lowIndex - 1;
 		// loop until low meets high
@@ -3112,7 +3227,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		{ // loop from low to high to find a candidate for swapping
 			lowToHighValue = ((Integer) ((Object[]) elements.elementAt(lowToHighIndex))[0]);
 			while (lowToHighIndex < newLowIndex & lowToHighValue.compareTo(pivotValue)<0 )
-			{ 
+			{
 				newHighIndex = lowToHighIndex; // add element to lower part
 				lowToHighIndex ++;
 				lowToHighValue = ((Integer) ((Object[]) elements.elementAt(lowToHighIndex))[0]);
@@ -3121,29 +3236,29 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			// loop from high to low find other candidate for swapping
 			highToLowValue = ((Integer) ((Object[]) elements.elementAt(highToLowIndex))[0]);
 			while (newHighIndex <= highToLowIndex & (highToLowValue.compareTo(pivotValue)>0))
-			{ 
+			{
 				newLowIndex = highToLowIndex; // add element to higher part
 				highToLowIndex --;
 				highToLowValue = ((Integer) ((Object[]) elements.elementAt(highToLowIndex))[0]);
 			}
-			
+
 			// swap if needed
 			if (lowToHighIndex == highToLowIndex) // one last element, may go in either part
-			{ 
+			{
 				newHighIndex = lowToHighIndex; // move element arbitrary to lower part
 			}
 			else if (lowToHighIndex < highToLowIndex) // not last element yet
-			{ 
+			{
 				compareResult = lowToHighValue.compareTo(highToLowValue);
 				if (compareResult >= 0) // low >= high, swap, even if equal
-				{ 
+				{
 					parking = ((Object[]) elements.elementAt(lowToHighIndex));
-					elements.setElementAt(((Object[]) elements.elementAt(highToLowIndex)), lowToHighIndex);
+					elements.setElementAt((elements.elementAt(highToLowIndex)), lowToHighIndex);
 					elements.setElementAt(parking, highToLowIndex);
-			
+
 					newLowIndex = highToLowIndex;
 					newHighIndex = lowToHighIndex;
-			
+
 					lowToHighIndex ++;
 					highToLowIndex --;
 				}
@@ -3152,76 +3267,80 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 
 		// Continue recursion for parts that have more than one element
 		if (lowIndex < newHighIndex)
-		{ 
+		{
 			this.quickSort(elements, lowIndex, newHighIndex); // sort lower subpart
 		}
 		if (newLowIndex < highIndex)
-		{ 
+		{
 			this.quickSort(elements, newLowIndex, highIndex); // sort higher subpart
 		}
 	}
-	
+
 	class SplashScreen extends JWindow
-{
-    public SplashScreen(String filename, int waitTime)
-    {
-        super();
-        JLabel l = new JLabel(new ImageIcon(MHAGUI.class.getResource(filename)));
-        getContentPane().add(l, BorderLayout.CENTER);
-        pack();
-        Dimension screenSize =
-          Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension labelSize = l.getPreferredSize();
-        setLocation(screenSize.width/2 - (labelSize.width/2),
-                    screenSize.height/2 - (labelSize.height/2));
-        final int pause = waitTime;
-        addMouseListener(new MouseAdapter()
-            {
-                public void mousePressed(MouseEvent e)
-                {
-                    setVisible(false);
-                    dispose();
-                }
-            });
-        final Runnable closerRunner = new Runnable()
-            {
-                public void run()
-                {
-                    setVisible(false);
-                    dispose();
-                }
-            };
-        Runnable waitRunner = new Runnable()
-            {
-                public void run()
-                {
-                    try
-                        {
-                            Thread.sleep(pause);
-                            SwingUtilities.invokeAndWait(closerRunner);
-                        }
-                    catch(Exception e)
-                        {
-                            e.printStackTrace();
-                            // can catch InvocationTargetException
-                            // can catch InterruptedException
-                        }
-                }
-            };
-        setVisible(true);
-        Thread splashThread = new Thread(waitRunner, "SplashThread");
-        splashThread.start();
-    }
-}
-  
+	{
+		public SplashScreen(String filename, int waitTime)
+		{
+			super();
+			JLabel l = new JLabel(new ImageIcon(MHAGUI.class.getResource(filename)));
+			getContentPane().add(l, BorderLayout.CENTER);
+			pack();
+			Dimension screenSize =
+					Toolkit.getDefaultToolkit().getScreenSize();
+			Dimension labelSize = l.getPreferredSize();
+			setLocation(screenSize.width/2 - (labelSize.width/2),
+					screenSize.height/2 - (labelSize.height/2));
+			final int pause = waitTime;
+			addMouseListener(new MouseAdapter()
+			{
+				@Override
+				public void mousePressed(MouseEvent e)
+				{
+					setVisible(false);
+					dispose();
+				}
+			});
+			final Runnable closerRunner = new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					setVisible(false);
+					dispose();
+				}
+			};
+			Runnable waitRunner = new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						Thread.sleep(pause);
+						SwingUtilities.invokeAndWait(closerRunner);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						// can catch InvocationTargetException
+						// can catch InterruptedException
+					}
+				}
+			};
+			setVisible(true);
+			Thread splashThread = new Thread(waitRunner, "SplashThread");
+			splashThread.start();
+		}
+	}
+
 	class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 		JSeparator separator;
-		
+
 		public ComboBoxRenderer() {
 			setOpaque(true);
 			setBorder(new EmptyBorder(1, 1, 1, 1));
 			separator = new JSeparator(JSeparator.HORIZONTAL);
 		}
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			String str = (value == null) ? "" : value.toString();
 			if (SEPARATOR.equals(str)) {
@@ -3237,9 +3356,9 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			if(index == -1 && value instanceof Color){
 				Color scolor = (Color) value;
 				super.setBackground(scolor);
-//				super.setForeground(scolor);
+				//				super.setForeground(scolor);
 				setText("Equipe "+(list.getSelectedIndex()));
-				return this;	
+				return this;
 			}
 			setFont(list.getFont());
 			if(value instanceof Color)
@@ -3251,10 +3370,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				setText(str);
 			return this;
 		}
+		@Override
 		public void setForeground(Color fg){}
+		@Override
 		public void setBackground(Color bg){}
 	}
-	
+
 	final String SEPARATOR = "SEPARATOR";
 	class BlockComboListener implements ActionListener {
 		JComboBox combo;
@@ -3266,6 +3387,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			currentItem = combo.getSelectedItem();
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String tempItem = (String) combo.getSelectedItem();
 			if (SEPARATOR.equals(tempItem)) {
@@ -3275,9 +3397,9 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			}
 		}
 	}
-	
+
 	private final Color[] listeCouleurs={Color.CYAN,Color.GREEN,Color.LIGHT_GRAY,Color.ORANGE,Color.MAGENTA,Color.WHITE,Color.YELLOW,Color.PINK};
-	
+
 	private Color getCouleur(int i)
 	{
 		if(i>=0 && i<listeCouleurs.length)
@@ -3286,12 +3408,12 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			return Color.BLUE;
 		return Color.PINK;
 	}
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 	/**
 	 * This runs the program
 	 * @param argv
@@ -3304,48 +3426,48 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			String os = System.getProperty("os.name");
 			String jv = System.getProperty("java.version");
 
-/*			if ( jv.startsWith("1.4.2") && os != null && os.startsWith("Linux")) {
+			/*			if ( jv.startsWith("1.4.2") && os != null && os.startsWith("Linux")) {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 			}
 			else {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			}*/
-//		UIManager.LookAndFeelInfo[] laf = UIManager.getInstalledLookAndFeels();
-//		for(int i=0;i<laf.length;i++)
-//			System.out.println(laf[i].toString());
-//		UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-//		UIManager.setLookAndFeel("gnu.javax.swing.plaf.gnu.GNULookAndFeel");
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		try
-		{
-			//Ca permet de ne pas ajouter ces lookandfeel si les jar ne sont pas dans le classpath
-			Class c=Class.forName("net.sourceforge.napkinlaf.NapkinLookAndFeel");
-			UIManager.installLookAndFeel("Napkin","net.sourceforge.napkinlaf.NapkinLookAndFeel");
-		}
-		catch(Exception e){e.printStackTrace();}
-		try
-		{
-			Class c=Class.forName("com.birosoft.liquid.LiquidLookAndFeel");
-			UIManager.installLookAndFeel("Liquid","com.birosoft.liquid.LiquidLookAndFeel");
-		}
-		catch(Exception e){e.printStackTrace();}
-//		UIManager.installLookAndFeel("Napkin","net.sourceforge.napkinlaf.NapkinLookAndFeel");
-//		UIManager.installLookAndFeel("Liquid","com.birosoft.liquid.LiquidLookAndFeel");
-//		UIManager.installLookAndFeel("Substance","org.jvnet.substance.SubstanceLookAndFeel");
-//		UIManager.installLookAndFeel("Windows JG","com.jgoodies.looks.windows.WindowsLookAndFeel");
-//		UIManager.installLookAndFeel("Plastic","com.jgoodies.looks.plastic.PlasticLookAndFeel");
-//		UIManager.installLookAndFeel("Plastic 3D","com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-//		UIManager.installLookAndFeel("Plastic XP","com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+			//		UIManager.LookAndFeelInfo[] laf = UIManager.getInstalledLookAndFeels();
+			//		for(int i=0;i<laf.length;i++)
+			//			System.out.println(laf[i].toString());
+			//		UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			//		UIManager.setLookAndFeel("gnu.javax.swing.plaf.gnu.GNULookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			try
+			{
+				//Ca permet de ne pas ajouter ces lookandfeel si les jar ne sont pas dans le classpath
+				Class c = Class.forName("net.sourceforge.napkinlaf.NapkinLookAndFeel");
+				UIManager.installLookAndFeel("Napkin", "net.sourceforge.napkinlaf.NapkinLookAndFeel");
+			}
+			catch(Exception e){e.printStackTrace();}
+			try
+			{
+				Class c=Class.forName("com.birosoft.liquid.LiquidLookAndFeel");
+				UIManager.installLookAndFeel("Liquid","com.birosoft.liquid.LiquidLookAndFeel");
+			}
+			catch(Exception e){e.printStackTrace();}
+			//		UIManager.installLookAndFeel("Napkin","net.sourceforge.napkinlaf.NapkinLookAndFeel");
+			//		UIManager.installLookAndFeel("Liquid","com.birosoft.liquid.LiquidLookAndFeel");
+			//		UIManager.installLookAndFeel("Substance","org.jvnet.substance.SubstanceLookAndFeel");
+			//		UIManager.installLookAndFeel("Windows JG","com.jgoodies.looks.windows.WindowsLookAndFeel");
+			//		UIManager.installLookAndFeel("Plastic","com.jgoodies.looks.plastic.PlasticLookAndFeel");
+			//		UIManager.installLookAndFeel("Plastic 3D","com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+			//		UIManager.installLookAndFeel("Plastic XP","com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
 
-//		JFrame.setDefaultLookAndFeelDecorated(true);
-//		JDialog.setDefaultLookAndFeelDecorated(true);
-		gui = new MHAGUI( new MHA() );
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = gui.getSize();
-		frameSize.height = ((frameSize.height > screenSize.height) ? screenSize.height : frameSize.height);
-		frameSize.width = ((frameSize.width > screenSize.width) ? screenSize.width : frameSize.width);
-		gui.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		gui.setVisible(true);
+			//		JFrame.setDefaultLookAndFeelDecorated(true);
+			//		JDialog.setDefaultLookAndFeelDecorated(true);
+			gui = new MHAGUI( new MHA() );
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			Dimension frameSize = gui.getSize();
+			frameSize.height = ((frameSize.height > screenSize.height) ? screenSize.height : frameSize.height);
+			frameSize.width = ((frameSize.width > screenSize.width) ? screenSize.width : frameSize.width);
+			gui.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+			gui.setVisible(true);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

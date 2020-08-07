@@ -32,7 +32,7 @@ public class  Test{
 
     private void addtroll (){
         if(MHAGameTest.addTroll(new Troll("TOTO",12345,1,0,Troll.RACE_KASTAR))){System.out.println("création troll 1 ok");}
-	MHAGameTest.getTrollById(12345).setProfil(50,3,9,18,4,80,6,600,50,30);
+	MHAGameTest.getTrollById(12345).setProfil(50,3,9,18,4,1,80,6,600,50,30);
 	for(int i=1;i<=14;i++)
 		MHAGameTest.getTrollById(12345).addComp(i,90,1);
 	for(int i=1;i<=44;i++)

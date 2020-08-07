@@ -21,6 +21,7 @@ mha/engine/core/Piege.java
 mha/engine/core/Portail.java
 mha/engine/core/Test.java
 mha/engine/core/Troll.java
+mha/engine/dice/DiceHelper.java
 mha/ui/CommandLine/CommandText.java
 mha/ui/SimpleGUI/AjoutEquipement.java
 mha/ui/SimpleGUI/ColorCellRenderer.java

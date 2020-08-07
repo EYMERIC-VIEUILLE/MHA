@@ -48,13 +48,13 @@ public class CreationTroll extends JPanel implements ActionListener,
 	final JTextField[] caracFields = { new JTextField(20), new JTextField(20),new JTextField(20), new JTextField(20), new JTextField(20),new JTextField(20), new JTextField(20) };
 	final JLabel[] amelioPlusInit, piInvestis, prochaineAmelio;
 	final String[] titresCarac = { "Caractéristique", "Nb Amélios", "","PI investis", "Prix prochaine Amélio" };
-	final String[] caracs = { "Att", "Esq", "Dég", "Règ", "PV", "Vue", "DLA" };
-	final String[] uniteCaracs = { "D6", "D6", "D3", "D3", "", "", "min" };
-	final int[] incrementCaracs = { 1, 1, 1, 1, 10, 1, 30 };
-	final int[] piInitCoutCaracs = { 16, 16, 16, 30, 16, 16, 18 };
-	final int[] piInitCoutCaracsParRace = { 16, 16, 16, 30, 16, 16, 18 };
-	final int[] nbInitCaracs = { 3, 3, 3, 1, 30, 3, 720 };
-	final int[] nbInitCaracsParRace = { 3, 3, 3, 1, 30, 3, 720 };
+	final String[] caracs = { "Att", "Esq", "Dég", "Règ", "ArN", "PV", "Vue", "DLA" };
+	final String[] uniteCaracs = { "D6", "D6", "D3", "D3", "D3", "", "", "min" };
+	final int[] incrementCaracs = { 1, 1, 1, 1, 1, 10, 1, 30 };
+	final int[] piInitCoutCaracs = { 16, 16, 16, 30, 30, 16, 16, 18 };
+	final int[] piInitCoutCaracsParRace = { 16, 16, 16, 30, 30, 16, 16, 18 };
+	final int[] nbInitCaracs = { 3, 3, 3, 1, 1, 30, 3, 720 };
+	final int[] nbInitCaracsParRace = { 3, 3, 3, 1, 1, 30, 3, 720 };
 	final String[] competences_reservees = { "Botte secrète", "Régénération accrue","Accélération du métabolisme", "Camouflage"};
 	final String[] competences = {"Charger", "Poser un piége", "Contre-attaque","Déplacement éclair", "Frénésie", "Lancer de potion", "Pistage" };
 	final String[] competences_niveau_sup = {"Attaque précise","Coup de butoir", "Parer",};
@@ -121,7 +121,7 @@ public class CreationTroll extends JPanel implements ActionListener,
 		piInvestis = new JLabel[caracs.length];
 		prochaineAmelio = new JLabel[caracs.length];
 
-		caracSpinner = new JSpinner[7];
+		caracSpinner = new JSpinner[8];
 		gui = g;
 		GridBagLayout Gridbag = new GridBagLayout();
 
@@ -746,7 +746,6 @@ public class CreationTroll extends JPanel implements ActionListener,
 			piInitCoutCaracsParRace[i] = piInitCoutCaracs[i];
 			piInvestis[i].setText("0");
 			caracSpinner[i].setValue(0);
-			mouchesFields[i].setText("0");
 		}
 		for (int i = 0; i < competences.length; i++) {
 			compCheckBox[i].setSelected(false);
@@ -767,6 +766,9 @@ public class CreationTroll extends JPanel implements ActionListener,
 			if (i < 4) {
 				pourcentSort[i].setEnabled(false);
 			}
+		}
+		for(int i = 0; i < mouchesFields.length; i++) {
+			mouchesFields[i].setText("0");
 		}
 		while(((DefaultTableModel) equipementTable.getModel()).getRowCount()!=0)
 			((DefaultTableModel) equipementTable.getModel()).removeRow(0);
@@ -1005,17 +1007,17 @@ public class CreationTroll extends JPanel implements ActionListener,
 														
 							//DLA
 							int nbDlaAmelio = 0;
-							if(Integer.parseInt(ls2[8]) < 555 ) {
-								nbDlaAmelio = (int)(10 + (555-Integer.parseInt(ls2[8]))/2.5);
+							if(Integer.parseInt(ls2[9]) < 555 ) {
+								nbDlaAmelio = (int)(10 + (555-Integer.parseInt(ls2[9]))/2.5);
 							}
 							else {
-								nbDlaAmelio = (int)((21 - Math.sqrt((8*Integer.parseInt(ls2[8]) - 4437)/3))/2);
+								nbDlaAmelio = (int)((21 - Math.sqrt((8*Integer.parseInt(ls2[9]) - 4437)/3))/2);
 							}
-							caracSpinner[6].setValue(nbDlaAmelio);
+							caracSpinner[7].setValue(nbDlaAmelio);
 													
 							//MM et RM
-							mmField.setText(ls2[9]);
-							rmField.setText(ls2[10]);							
+							mmField.setText(ls2[10]);
+							rmField.setText(ls2[11]);							
 						}
 						else if (ls2[0].toLowerCase().equals("addcomp")) {
 							int nbComp = Integer.parseInt(ls2[1]);
@@ -1718,7 +1720,7 @@ public class CreationTroll extends JPanel implements ActionListener,
 			for (int i = 0; i < caracs.length; i++) {
 				nbAmelios = Integer.parseInt(caracSpinner[i].getValue()
 						.toString());
-				if (i != 6) {
+				if (i != 7) {
 					amelioPlusInit[i].setText(nbInitCaracsParRace[i]
 							+ nbAmelios * incrementCaracs[i] + " "
 							+ uniteCaracs[i]);

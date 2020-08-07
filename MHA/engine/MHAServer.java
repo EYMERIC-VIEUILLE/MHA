@@ -562,7 +562,7 @@ public class MHAServer extends Thread {
 		}
 		myChatArea.putString(myIndex,"Mouches: "+t.getMouches());
 	}
-	else if(liste.length==11 && liste[0].toLowerCase().equals("carac"))
+	else if(liste.length==12 && liste[0].toLowerCase().equals("carac"))
 	{
 		t=game.getTrollBySocketId(myIndex);
 		if(t==null)
@@ -582,12 +582,13 @@ public class MHAServer extends Thread {
 			int esq=Math.abs(Integer.parseInt(liste[3]));
 			int deg=Math.abs(Integer.parseInt(liste[4]));
 			int reg=Math.abs(Integer.parseInt(liste[5]));
-			int pv=Math.abs(Integer.parseInt(liste[6]));
-			int vue=Math.abs(Integer.parseInt(liste[7]));
-			int dla=Math.abs(Integer.parseInt(liste[8]));
-			int mm=Math.abs(Integer.parseInt(liste[9]));
-			int rm=Math.abs(Integer.parseInt(liste[10]));
-			t.setProfil(niv,att,esq,deg,reg,pv,vue,dla,rm,mm);
+			int arn=Math.abs(Integer.parseInt(liste[6]));
+			int pv=Math.abs(Integer.parseInt(liste[7]));
+			int vue=Math.abs(Integer.parseInt(liste[8]));
+			int dla=Math.abs(Integer.parseInt(liste[9]));
+			int mm=Math.abs(Integer.parseInt(liste[10]));
+			int rm=Math.abs(Integer.parseInt(liste[11]));
+			t.setProfil(niv,att,esq,deg,reg,arn,pv,vue,dla,rm,mm);
 			caracTrolls.set(myIndex,caracTrolls.get(myIndex)+inputLine+"\n");
 			myChatArea.putString(myIndex,"Caractéristiques de votre troll entrées");
 			return false;
