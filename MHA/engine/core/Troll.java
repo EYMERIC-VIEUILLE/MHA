@@ -19,8 +19,10 @@
 
 package mha.engine.core;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import mha.engine.MHABot;
@@ -171,6 +173,7 @@ public class Troll {
 	private Equipement mainGauche=null;
 	private Equipement torse=null;
 	private Equipement pieds=null;
+	private List<Equipement> doigts = new ArrayList<>();
 
 	public MHABot bot=null;
 
@@ -507,6 +510,10 @@ public class Troll {
 			r="Kastar";
 		else if(race==3)
 			r="Tomawak";
+		String rings = "";
+		for (Equipement fingersEqpt : doigts) {
+			rings += formatEquipePorte(fingersEqpt);
+		}
 		r= ("Numéro      : "+id+"\n"+
 				"Nom         : "+name+"\n"+
 				"Race        : "+r+"\n"+
@@ -517,7 +524,7 @@ public class Troll {
 				formatEquipePorte(mainDroite)+
 				formatEquipePorte(mainGauche)+
 				formatEquipePorte(torse)+
-				formatEquipePorte(pieds));
+				formatEquipePorte(pieds) + rings);
 		return r.substring(0,r.length()-1);
 	}
 
@@ -541,6 +548,8 @@ public class Troll {
 			return "Pieds       : "+e.getId()+" "+e.getName()+"\n";
 		case Equipement.ARME_2_MAINS:
 			return "Deux mains  : "+e.getId()+" "+e.getName()+"\n";
+		case Equipement.ANNEAU:
+			return "Anneau  : " + e.getId() + " " + e.getName() + "\n";
 		}
 		return "";
 	}
@@ -812,6 +821,12 @@ public class Troll {
 			mainDroite=e;
 			bonusEquip(e,true);
 			return;
+		case Equipement.ANNEAU:
+			if (doigts.size() < 1) {
+				bonusEquip(e, true);
+				doigts.add(e);
+			}
+			return;
 		}
 		return;
 	}
@@ -831,10 +846,8 @@ public class Troll {
 		String s="";
 		for(int i=0;i<listeEquipement.size();i++)
 		{
-			int equip=0;
 			Equipement e=listeEquipement.elementAt(i);
-			if(e==torse || e==mainGauche || e==mainDroite || e==tete || e==cou || e==pieds)
-				equip=1;
+			int equip = e.isEquipped() ? 1 : 0;
 			s+=e.getId()+";"+e.getType()+";"+equip+";"+e.getDescr()+";"+e.getName()+"\n";
 		}
 		if(s.equals(""))
@@ -844,23 +857,7 @@ public class Troll {
 
 	public boolean isEquipe(Equipement e)
 	{
-		switch(e.getType())
-		{
-		case Equipement.ARMURE:
-			return torse==e;
-		case Equipement.BOUCLIER:
-			return mainGauche==e;
-		case Equipement.CASQUE:
-			return tete==e;
-		case Equipement.ARME_1_MAIN:
-		case Equipement.ARME_2_MAINS:
-			return mainDroite==e;
-		case Equipement.TALISMAN:
-			return cou==e;
-		case Equipement.BOTTES:
-			return pieds==e;
-		}
-		return false;
+		return e.isEquipped();
 	}
 
 	public int getBMAttaque()

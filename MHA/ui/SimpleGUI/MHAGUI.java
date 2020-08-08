@@ -39,7 +39,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -2895,8 +2897,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					"    <td valign=\"top\"><b>Magie</b></td>"+
 					"    <td valign=\"top\">Résistance à la Magie...................: "+ls[28]+" "+pm((Integer.parseInt(ls[29])*Integer.parseInt(ls[28]))/100)+" (Total : "+
 					(Integer.parseInt(ls[28])+((Integer.parseInt(ls[29])*Integer.parseInt(ls[28]))/100))+")<br>"+
-					"      Maîtrise de la Magie....................: "+ls[30]+" "+pm((Integer.parseInt(ls[30])*Integer.parseInt(ls[30]))/100)+" (Total : "+
-					(Integer.parseInt(ls[30])+((Integer.parseInt(ls[30])*Integer.parseInt(ls[30]))/100))+")<br>"+
+					"      Maîtrise de la Magie....................: " + ls[30] + " "
+					+ pm((Integer.parseInt(ls[31]) * Integer.parseInt(ls[30])) / 100) + " (Total : "
+					+ (Integer.parseInt(ls[30]) + ((Integer.parseInt(ls[31]) * Integer.parseInt(ls[30])) / 100))
+					+ ")<br>" +
 					"      Bonus de Concentration : "+ls[32]+" % "+
 					"    </td>"+
 					"  </tr>"+
@@ -2932,6 +2936,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		try
 		{
 			int torse=-1,mainGauche=-1,mainDroite=-1,tete=-1,cou=-1,pieds=-1;
+			List<Integer> equippedRingsIndexes = new ArrayList<>();
 			String []ls=s.split("\n");
 			String [][]lss=new String[ls.length] [];
 			Vector<String []> [] lv=new Vector[16];
@@ -2947,20 +2952,24 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					for(int j=5;j<lss[i].length;j++)
 						lss[i][4]+=";"+lss[i][j];
 					int type=Integer.parseInt(lss[i][1]);
-					if(type==Equipement.ARMURE && lss[i][2].equals("1"))
+					boolean isBrought = lss[i][2].equals("1");
+					if (type == Equipement.ARMURE && isBrought)
 						torse=i;
-					else if(type==Equipement.BOUCLIER && lss[i][2].equals("1"))
+					else if (type == Equipement.BOUCLIER && isBrought)
 						mainGauche=i;
-					else if(type==Equipement.CASQUE && lss[i][2].equals("1"))
+					else if (type == Equipement.CASQUE && isBrought)
 						tete=i;
-					else if(type==Equipement.ARME_1_MAIN && lss[i][2].equals("1"))
+					else if (type == Equipement.ARME_1_MAIN && isBrought)
 						mainDroite=i;
-					else if(type==Equipement.TALISMAN && lss[i][2].equals("1"))
+					else if (type == Equipement.TALISMAN && isBrought)
 						cou=i;
-					else if(type==Equipement.BOTTES && lss[i][2].equals("1"))
+					else if (type == Equipement.BOTTES && isBrought)
 						pieds=i;
-					else if(type==Equipement.ARME_2_MAINS && lss[i][2].equals("1"))
+					else if (type == Equipement.ARME_2_MAINS && isBrought)
 					{	mainDroite=i;mainGauche=i; }
+					else if (type == Equipement.ANNEAU && isBrought) {
+						equippedRingsIndexes.add(i);
+					}
 					else
 						lv[type].add(lss[i]);
 				}
@@ -3045,14 +3054,25 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					stringEquip+="["+lss[pieds][0]+"] "+lss[pieds][4]+"<br><b>"+lss[pieds][3]+"</b>";
 				stringEquip+=
 						"				</td>"+
-								"			</tr>"+
-								"		</table>"+
-								"	</td>"+
-								"</tr>"+
-								"<tr height=\"18\"><td align=\"center\" valign=\"top\"><b>Equipement</b></td></tr>"+
-								"<tr> "+
-								"	<td valign=\"top\"> "+
-								"		<table class=\"mh_tdpage\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
+								"			</tr>";
+				stringEquip+= "		<tr height=\"18\"> "+
+					"			<td colspan=\"3\" align=\"center\" height=\"18\" valign=\"top\" width=\"327\"><b>Doigts</b></td>"
+					+
+						"		</tr>";
+				for (Integer ringIndex : equippedRingsIndexes) {
+					stringEquip += "		<tr> "+
+							"		<td colspan=\"3\" align=\"center\" height=\"19\" valign=\"top\">";
+					stringEquip+="["+lss[ringIndex][0]+"] "+lss[ringIndex][4]+"<br><b>"+lss[ringIndex][3]+"</b>";
+					stringEquip+="		</td>"+
+							"	</tr>";
+				}
+				stringEquip += "		</table>"+
+						"	</td>"+
+						"</tr>"+
+						"<tr height=\"18\"><td align=\"center\" valign=\"top\"><b>Equipement</b></td></tr>"+
+						"<tr> "+
+						"	<td valign=\"top\"> "+
+						"		<table class=\"mh_tdpage\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 				for(int i=0;i<lv.length;i++)
 				{
 					if(lv[i].size()==0)

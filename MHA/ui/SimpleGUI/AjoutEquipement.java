@@ -1,24 +1,36 @@
 package mha.ui.SimpleGUI;
 
 import java.awt.Component;
-import java.awt.Window;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.FileWriter;
-import java.io.Writer;
-import java.util.*;
+import java.util.Vector;
 
-import javax.swing.*;
-import mha.engine.core.Equipement;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import mha.engine.MHAFileFilter;
+import mha.engine.core.Equipement;
 
 
 public class AjoutEquipement extends JPanel implements ActionListener{
@@ -70,11 +82,11 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 		dialog = new JDialog(g, "Créer un équipement",true);
 		dialog.setVisible(false);
 		dialog.setContentPane(this);
-//		dialog.setSize(new Dimension(360, 480));
+		//		dialog.setSize(new Dimension(360, 480));
 		AjoutEquip=new String[nomChamp.length+5];
 		dialog.setResizable(false);
 		jw = g;
-		
+
 		if(MHAGUI.lastDirectory.length()==0)
 			fc = new JFileChooser(new File ("."));
 		else
@@ -83,13 +95,13 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 		fc.setFileFilter(filter);
 		filter = new MHAFileFilter("equ","Fichier équipement pour mountyhall arena");
 		fc.setFileFilter(filter);
-		
+
 		GridBagLayout Gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new java.awt.Insets(1, 1, 1, 1);
 		c.anchor=GridBagConstraints.WEST;
 		setLayout(Gridbag);
-		
+
 		//on initialise
 		idField = new JTextField(5);
 		nomField = new JTextField(50); nomField.setColumns(18);
@@ -99,7 +111,7 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 		equipeCheckBox = new JCheckBox("");
 		typeComboBox = new JComboBox(typesListe);
 		typeComboBox.addActionListener(this);
-		
+
 		champsListe = new Component[25];
 		champsListe[0] = nomField;
 		champsListe[1]=	idField;
@@ -127,14 +139,14 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 		champsListe[20] = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
 		champsListe[22] = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
 		champsListe[24] = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
-		
-		
+
+
 		//mise en page
-		
+
 		c.gridx=0;
 		c.gridy=0;
 		c.gridwidth=1;
-		
+
 		for(int i=0;i<nomChamp.length;i++){
 			c.gridx=0;
 			jl = new JLabel(nomChamp[i], null, SwingConstants.LEFT);
@@ -166,14 +178,14 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 					ftf.setColumns(3);
 				}
 
-	//			c.gridx++;
+				//			c.gridx++;
 				c.gridx++;
 				Gridbag.setConstraints(champsListe[i], c);
 				add(champsListe[i]);
 				c.gridy++;
 			}
 		}
-		
+
 		c.gridy=20;
 		c.gridx=0;
 		c.gridwidth=2;
@@ -207,23 +219,24 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 			dialog.setVisible(true);
 
 	}
-	
+
 	public synchronized String [] getEquip()
 	{
 		try
 		{
-//			wait();
+			//			wait();
 			return AjoutEquip;
 		}
 		catch(Exception e)
 		{e.printStackTrace();return AjoutEquip;}
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
-	
+
 		//addButon, fileButton, loadButton, typeComboBox
 		boolean[] etatFields = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,};
-		
+
 		if(e.getSource() == addButton){
 			try {
 				Integer.parseInt(idField.getText());
@@ -233,15 +246,15 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
+
 			if(nomField.getText() == "" || nomField.getText() == null) {
 				JOptionPane.showMessageDialog(dialog,
 						"Veuillez entrer le nom", "Erreur",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-		
-			
+
+
 			//"id","type","Att","Esq","Deg","DLA","reg","pv","vue","Armure Physique","Armure Magique","Effet de zone","Bidouille","Poids (en minutes)","MM","RM","Equipé","Nom"
 			String[] EquipString=new String[23];
 			EquipString[1]=idField.getText();
@@ -274,27 +287,27 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 			EquipString[21]=((JSpinner)(champsListe[16])).getValue().toString();
 			if(((JCheckBox)(champsListe[17])).isSelected()) {EquipString[22]="1";} else {EquipString[22]="0";}
 			EquipString[0]=nomField.getText();
-		
+
 			for(int i=0;i<EquipString.length;i++){
 				AjoutEquip[i]=EquipString[i];
 			}
 			dialog.setVisible(false);
 			dialog.dispose();
-//			notify();
+			//			notify();
 			return;
-			
+
 		}
-		
+
 		if(e.getSource() == cancelButton){
 			dialog.setVisible(false);
 			dialog.dispose();
 		}
-		
+
 		if(e.getSource() == saveButton){
-			
+
 			//addequip id type Att Esq Deg DLA reg pv vue armure_physique armure_magique effet_de_zone bidouille poids(en minute) mm rm est_équipé nom
 
-			
+
 			String addline="addequip ";
 			addline += idField.getText() + " ";
 			addline += typeComboBox.getSelectedIndex() + " ";
@@ -312,12 +325,12 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 			addline += ((JSpinner)(champsListe[24])).getValue().toString() + " ";
 			addline += ((JSpinner)(champsListe[10])).getValue().toString() + " ";
 			addline += ((JSpinner)(champsListe[11])).getValue().toString() + " ";
-			if(((JCheckBox)(champsListe[12])).isSelected()) {addline += "1 ";} else {addline += "0 ";} 
+			if(((JCheckBox)(champsListe[12])).isSelected()) {addline += "1 ";} else {addline += "0 ";}
 			if(((JCheckBox)(champsListe[13])).isSelected()) {addline += "1 ";} else {addline += "0 ";}
 			addline += ((JSpinner)(champsListe[14])).getValue().toString() + " ";
 			addline += ((JSpinner)(champsListe[15])).getValue().toString() + " ";
 			addline += ((JSpinner)(champsListe[16])).getValue().toString() + " ";
-			if(((JCheckBox)(champsListe[17])).isSelected()) {addline += "1 ";} else {addline += "0 ";} 
+			if(((JCheckBox)(champsListe[17])).isSelected()) {addline += "1 ";} else {addline += "0 ";}
 			addline += nomField.getText();
 			int returnVal = fc.showSaveDialog(this);
 			file = fc.getSelectedFile();
@@ -331,14 +344,14 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 				JOptionPane.showMessageDialog(dialog,
 						"Fichier introuvable ou incorrect", "Erreur",
 						JOptionPane.ERROR_MESSAGE);
-					return;
+				return;
 			}
 			JOptionPane.showMessageDialog(dialog,
 					"Sauvegarde réussie", "Erreur",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
+
 		if(e.getSource() == loadButton){
 			Vector <String> lignes = new Vector <String> ();
 			String valeur;
@@ -365,8 +378,8 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 					if(lignes.size()==0)
 					{
 						JOptionPane.showMessageDialog(dialog,
-							"Aucun équipement à importer", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
+								"Aucun équipement à importer", "Erreur",
+								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					if(lignes.size()==1)
@@ -413,7 +426,7 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 							for(int i=19;i<ligne.length;i++)
 								ligne[18]+=" "+ligne[i];
 						}
-							
+
 						nomField.setText(ligne[18]);
 						idField.setText(ligne[1]);
 						typeComboBox.setSelectedIndex(Integer.parseInt(ligne[2]));
@@ -426,14 +439,14 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 						((JSpinner)champsListe[9]).setValue(Integer.parseInt(ligne[9]));
 						((JSpinner)champsListe[10]).setValue(Integer.parseInt(ligne[10]));
 						((JSpinner)champsListe[11]).setValue(Integer.parseInt(ligne[11]));
-//						System.out.println(ligne[12]);
+						//						System.out.println(ligne[12]);
 						if(Integer.parseInt(ligne[12]) == 1){zoneCheckBox.setSelected(true);} else{zoneCheckBox.setSelected(false);}
-//						System.out.println(ligne[13]);
+						//						System.out.println(ligne[13]);
 						if(Integer.parseInt(ligne[13]) == 1){bidouilleCheckBox.setSelected(true);} else{bidouilleCheckBox.setSelected(false);}
 						((JSpinner)champsListe[14]).setValue(Integer.parseInt(ligne[14]));
 						((JSpinner)champsListe[15]).setValue(Integer.parseInt(ligne[15]));
 						((JSpinner)champsListe[16]).setValue(Integer.parseInt(ligne[16]));
-//						System.out.println(ligne[17]);
+						//						System.out.println(ligne[17]);
 						if(Integer.parseInt(ligne[17]) == 1){equipeCheckBox.setSelected(true);} else{equipeCheckBox.setSelected(false);}
 						((JSpinner)(champsListe[18])).setValue(0);
 						((JSpinner)(champsListe[19])).setValue(0);
@@ -457,13 +470,13 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 							possibilities[i]+=" ("+ls[1]+")";
 						}
 						String s = (String)JOptionPane.showInputDialog(
-									dialog,
-									"Choisissez l'équipement à importer :",
-									"Importation d'équipement",
-									JOptionPane.PLAIN_MESSAGE,
-									null,
-									possibilities,
-									possibilities[0]);
+								dialog,
+								"Choisissez l'équipement à importer :",
+								"Importation d'équipement",
+								JOptionPane.PLAIN_MESSAGE,
+								null,
+								possibilities,
+								possibilities[0]);
 						String [] ligne=new String[19];
 						for(int i=0;i<possibilities.length;i++)
 						{
@@ -539,7 +552,7 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 					}
 				}
 				catch (FileNotFoundException e2) {
-//					e2.printStackTrace();
+					//					e2.printStackTrace();
 					JOptionPane.showMessageDialog(dialog,
 							"Fichier introuvable ou incorrect", "Erreur",
 							JOptionPane.ERROR_MESSAGE);
@@ -554,13 +567,13 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 				}
 			}
 		}
-		
+
 		if(e.getSource() == typeComboBox){
-			
+
 			for (int i=0;i<etatFields.length;i++){
 				etatFields[i]=true;
 			}
-			
+
 			if(typeComboBox.getSelectedItem().equals("Bidouille") || typeComboBox.getSelectedItem().equals("Anneau") || typeComboBox.getSelectedItem().equals("Composants") || typeComboBox.getSelectedItem().equals("Bric à Brac") || typeComboBox.getSelectedItem().equals("Tarot") || typeComboBox.getSelectedItem().equals("Champignon") || typeComboBox.getSelectedItem().equals("Minerai")){
 				etatFields[3]=false;
 				etatFields[4]=false;
@@ -569,23 +582,28 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 				etatFields[7]=false;
 				etatFields[8]=false;
 				etatFields[9]=false;
-//				etatFields[10]=false;
-//				etatFields[11]=false;
+				//				etatFields[10]=false;
+				//				etatFields[11]=false;
 				etatFields[12]=false;
 				etatFields[15]=false;
 				etatFields[16]=false;
-				etatFields[17]=false;
-				
+
+				// Rings can be equipped
+				if (typeComboBox.getSelectedItem().equals("Anneau")) {
+					etatFields[17] = true;
+				} else {
+					etatFields[17] = false;
+				}
 			}
 			else if(typeComboBox.getSelectedItem().equals("Arme (une main)") || typeComboBox.getSelectedItem().equals("Arme (deux mains)")){
 				etatFields[8]=false;
-//				etatFields[10]=false;
+				//				etatFields[10]=false;
 				etatFields[12]=false;
 			}
 			else {
 				etatFields[8]=false;
-//				etatFields[11]=false;
-				etatFields[12]=false;				
+				//				etatFields[11]=false;
+				etatFields[12]=false;
 			}
 			if(typeComboBox.getSelectedItem().equals("Potion") || typeComboBox.getSelectedItem().equals("Parchemin"))
 			{
@@ -601,13 +619,13 @@ public class AjoutEquipement extends JPanel implements ActionListener{
 			for(int i=0;i<nomChamp.length;i++){
 				champsListe[i].setEnabled(etatFields[i]);
 			}
-			
+
 		}
-	
+
 	}
-	
-	
-	
+
+
+
 	public JFormattedTextField getTextField(JSpinner spinner) {
 		JComponent editor = spinner.getEditor();
 		if (editor instanceof JSpinner.DefaultEditor) {
