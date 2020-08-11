@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import mha.engine.MHABot;
 import mha.engine.dice.DiceHelper;
@@ -233,30 +234,31 @@ public class Troll {
 		isActive=b;
 	}
 
-	public void addBM(BM bm)
+	public BM addBM(BM bm)
 	{
 		listeBM.add(bm);
-		if(bm.getBMAttaque()!=0)
+		BM realBM = getUnCumulativeBM(bm);
+		if (realBM.getBMAttaque() != 0)
 			bmAttaque+=bm.getBMAttaque();
-		if(bm.getBMMAttaque()!=0)
+		if (realBM.getBMMAttaque() != 0)
 			bmmAttaque+=bm.getBMMAttaque();
-		if(bm.getBMEsquive()!=0)
+		if (realBM.getBMEsquive() != 0)
 			bmEsquive+=bm.getBMEsquive();
-		if(bm.getBMMEsquive()!=0)
+		if (realBM.getBMMEsquive() != 0)
 			bmmEsquive+=bm.getBMMEsquive();
-		if(bm.getBMDegat()!=0)
+		if (realBM.getBMDegat() != 0)
 			bmDegat+=bm.getBMDegat();
-		if(bm.getBMMDegat()!=0)
+		if (realBM.getBMMDegat() != 0)
 			bmmDegat+=bm.getBMMDegat();
-		if(bm.getBMMRegeneration()!=0)
+		if (realBM.getBMMRegeneration() != 0)
 			bmRegeneration+=bm.getBMMRegeneration();
-		if(bm.getBMRegeneration()!=0)
+		if (realBM.getBMRegeneration() != 0)
 			bmmRegeneration+=bm.getBMRegeneration();
-		if(bm.getBMVue()!=0)
+		if (realBM.getBMVue() != 0)
 			bmVue+=bm.getBMVue();
-		if(bm.getBMMVue()!=0)
+		if (realBM.getBMMVue() != 0)
 			bmmVue+=bm.getBMMVue();
-		if(bm.getBMDLA()!=0)
+		if (realBM.getBMDLA() != 0)
 			bmDLA+=bm.getBMDLA();
 		if(bm.getBMArmurePhysique()!=0)
 			armure_phy+=bm.getBMArmurePhysique();
@@ -271,6 +273,7 @@ public class Troll {
 		if(bm.getBMRM()!=0)
 			bmRM+=bm.getBMRM();
 
+		return realBM;
 	}
 
 	private void setComp(int idComp,int pourcentage, int level)
@@ -286,7 +289,7 @@ public class Troll {
 		if(listeBM.size()==0) return "";
 		String s=listeBM.elementAt(0).toString();
 		for(int i=1;i<listeBM.size();i++)
-			s+="\n"+listeBM.elementAt(i).toString();
+			s += "\n" + getUnCumulativeBM(listeBM.elementAt(i)).toString();
 		return s;
 	}
 
@@ -389,29 +392,29 @@ public class Troll {
 		for(int i=0;i<listeBM.size();i++)
 		{
 			BM bm=listeBM.elementAt(i);
+			BM realBM = getUnCumulativeBM(bm);
 			if(bm.newTurn())
 			{
 				listeBM.remove(i);
 				i--;
-				bmAttaque-=bm.getBMAttaque();
-				bmmAttaque-=bm.getBMMAttaque();
-				bmEsquive-=bm.getBMEsquive();
-				bmmEsquive-=bm.getBMMEsquive();
-				bmDegat-=bm.getBMDegat();
-				bmmDegat-=bm.getBMMDegat();
-				bmRegeneration-=bm.getBMRegeneration();
-				bmmRegeneration-=bm.getBMMRegeneration();
-				bmVue-=bm.getBMVue();
-				bmmVue-=bm.getBMMVue();
-				bmDLA-=bm.getBMDLA();
-				armure_phy-=bm.getBMArmurePhysique();
-				armure_mag-=bm.getBMArmureMagique();
-				bmMM-=bm.getBMMM();
-				bmRM-=bm.getBMRM();
-				if(bm.isGlue())
+				bmAttaque -= realBM.getBMAttaque();
+				bmmAttaque -= realBM.getBMMAttaque();
+				bmEsquive -= realBM.getBMEsquive();
+				bmmEsquive -= realBM.getBMMEsquive();
+				bmDegat -= realBM.getBMDegat();
+				bmmDegat -= realBM.getBMMDegat();
+				bmRegeneration -= realBM.getBMRegeneration();
+				bmmRegeneration -= realBM.getBMMRegeneration();
+				bmVue -= realBM.getBMVue();
+				bmmVue -= realBM.getBMMVue();
+				bmDLA -= realBM.getBMDLA();
+				armure_phy -= realBM.getBMArmurePhysique();
+				armure_mag -= realBM.getBMArmureMagique();
+				bmMM -= realBM.getBMMM();
+				bmRM -= realBM.getBMRM();
+				if (realBM.isGlue())
 					glue--;
-				venin-=bm.getVenin();
-
+				venin -= realBM.getVenin();
 			}
 		}
 	}
@@ -421,26 +424,27 @@ public class Troll {
 		for(int i=0;i<listeBM.size();i++)
 		{
 			BM bm=listeBM.elementAt(i);
+			BM realBM = getUnCumulativeBM(bm);
 			listeBM.remove(i);
 			i--;
-			bmAttaque-=bm.getBMAttaque();
-			bmmAttaque-=bm.getBMMAttaque();
-			bmEsquive-=bm.getBMEsquive();
-			bmmEsquive-=bm.getBMMEsquive();
-			bmDegat-=bm.getBMDegat();
-			bmmDegat-=bm.getBMMDegat();
-			bmRegeneration-=bm.getBMRegeneration();
-			bmmRegeneration-=bm.getBMMRegeneration();
-			bmVue-=bm.getBMVue();
-			bmmVue-=bm.getBMMVue();
-			bmDLA-=bm.getBMDLA();
-			armure_phy-=bm.getBMArmurePhysique();
-			armure_mag-=bm.getBMArmureMagique();
-			bmMM-=bm.getBMMM();
-			bmRM-=bm.getBMRM();
-			if(bm.isGlue())
+			bmAttaque -= realBM.getBMAttaque();
+			bmmAttaque -= realBM.getBMMAttaque();
+			bmEsquive -= realBM.getBMEsquive();
+			bmmEsquive -= realBM.getBMMEsquive();
+			bmDegat -= realBM.getBMDegat();
+			bmmDegat -= realBM.getBMMDegat();
+			bmRegeneration -= realBM.getBMRegeneration();
+			bmmRegeneration -= realBM.getBMMRegeneration();
+			bmVue -= realBM.getBMVue();
+			bmmVue -= realBM.getBMMVue();
+			bmDLA -= realBM.getBMDLA();
+			armure_phy -= realBM.getBMArmurePhysique();
+			armure_mag -= realBM.getBMArmureMagique();
+			bmMM -= realBM.getBMMM();
+			bmRM -= realBM.getBMRM();
+			if (realBM.isGlue())
 				glue--;
-			venin-=bm.getVenin();
+			venin -= realBM.getVenin();
 		}
 	}
 
@@ -1374,5 +1378,74 @@ public class Troll {
 		return inbox;
 	}
 
+	/**
+	 * Compute the real effect of the BM taking the uncumulative effect into
+	 * account.<br>
+	 * 33% for the second effect<br>
+	 * 60% for the third effect<br>
+	 * 75% for the forth effect<br>
+	 * 85% for the fifth effect<br>
+	 * 90% for the next ones.
+	 *
+	 * @param bm
+	 *            the bonus/malus to apply
+	 * @return the real bonus/malus effect
+	 */
+	private BM getUnCumulativeBM(final BM bm) {
+		List<BM> sameBonuses = listeBM.stream().filter(bonus -> bonus.getName().equals(bm.getName()))
+				.collect(Collectors.toList());
+		int bmIndex = sameBonuses.indexOf(bm);
+		float decumulativeCoeff;
+		switch (bmIndex) {
+		case 0:
+			decumulativeCoeff = 0;
+			break;
+		case 1:
+			decumulativeCoeff = 0.33f;
+			break;
+		case 2:
+			decumulativeCoeff = 0.6f;
+			break;
+		case 3:
+			decumulativeCoeff = 0.75f;
+			break;
+		case 4:
+			decumulativeCoeff = 0.85f;
+			break;
+		default:
+			decumulativeCoeff = 0.9f;
+		}
+		BM realBM = new BM(bm.getName(), computeUncumulativeValue(bm.getBMAttaque(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMAttaque(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMEsquive(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMEsquive(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMDegat(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMDegat(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMDLA(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMRegeneration(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMRegeneration(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMVue(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMVue(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getVenin(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMArmurePhysique(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMArmureMagique(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMMM(), decumulativeCoeff),
+				computeUncumulativeValue(bm.getBMRM(), decumulativeCoeff), bm.isGlue(), bm.getDuree());
 
+		return realBM;
+	}
+
+	/**
+	 * Compute the real value of the given BMM applied considering the given
+	 * coefficient.
+	 *
+	 * @param bmValue
+	 *            the BM value to consider
+	 * @param coeff
+	 *            the uncumulative coefficient to apply
+	 * @return the real BM value to apply
+	 */
+	private int computeUncumulativeValue(final int bmValue, final float coeff) {
+		return bmValue - (int) (bmValue * coeff);
+	}
 }

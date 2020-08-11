@@ -811,9 +811,15 @@ public class MHAGame implements Serializable {
 				bm = new BM(e.getName(), diceHelper.roll(e.getBMAttaque(), 3), diceHelper.roll(e.getBMEsquive(), 3),
 						e.getBMDegat(), e.getBMDLA(), e.getBMRegeneration(), e.getBMVue(), 0, e.getBMArmurePhysique(),
 						e.getBMArmureMagique(), e.getBMMM(), e.getBMRM(), false, duree);
-				t.addBM(bm);
+				BM realBM = t.addBM(bm);
 				events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé une potion sur "+t.getName()+" ("+t.getId()+")");
-				s3 += bm.getName() + " : " + formate("PV",pv)+ formate("Att",bm.getBMAttaque())+ formate("Att Mag",bm.getBMMAttaque()) + formate("Esq",bm.getBMEsquive()) + formate("Deg",bm.getBMDegat()) + formate("Deg Mag",bm.getBMMDegat()) + formate("DLA",bm.getBMDLA()) + formate("Reg",bm.getBMRegeneration()) + formate("Vue",bm.getBMVue()) + formate("Arm",bm.getBMArmureMagique()+bm.getBMArmurePhysique()) + formate("MM",bm.getBMMM()) + formate("RM",bm.getBMRM()) + "Durée "+duree+" tour(s)";
+				s3 += realBM.getName() + " : " + formate("PV", pv) + formate("Att", realBM.getBMAttaque())
+						+ formate("Att Mag", realBM.getBMMAttaque()) + formate("Esq", realBM.getBMEsquive())
+						+ formate("Deg", realBM.getBMDegat()) + formate("Deg Mag", realBM.getBMMDegat())
+						+ formate("DLA", realBM.getBMDLA()) + formate("Reg", realBM.getBMRegeneration())
+						+ formate("Vue", realBM.getBMVue())
+						+ formate("Arm", realBM.getBMArmureMagique() + realBM.getBMArmurePhysique())
+						+ formate("MM", bm.getBMMM()) + formate("RM", realBM.getBMRM()) + "Durée " + duree + " tour(s)";
 				s3 += "\nLes effets se feront ressentir pendant " + duree + " tours.";
 			}
 			else
@@ -866,9 +872,15 @@ public class MHAGame implements Serializable {
 					bm = new BM(e.getName(), diceHelper.roll(e.getBMAttaque(), 3), diceHelper.roll(e.getBMEsquive(), 3),
 							e.getBMDegat(), e.getBMDLA(), e.getBMRegeneration(), e.getBMVue(), 0,
 							e.getBMArmurePhysique(), e.getBMArmureMagique(), e.getBMMM(), e.getBMRM(), false, duree);
-					t2.addBM(bm);
+					BM realBM = t2.addBM(bm);
 					events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé une potion sur "+t2.getName()+" ("+t2.getId()+")");
-					s3 += bm.getName() + " : " + formate("PV",pv)+ formate("Att",bm.getBMAttaque()) + formate("Esq",bm.getBMEsquive()) + formate("Deg",bm.getBMDegat()) + formate("DLA",bm.getBMDLA()) + formate("Reg",bm.getBMRegeneration()) + formate("Vue",bm.getBMVue()) + formate("Arm",bm.getBMArmureMagique()+bm.getBMArmurePhysique()) + formate("MM",bm.getBMMM()) + formate("RM",bm.getBMRM()) + "Durée "+duree+" tour(s)";
+					s3 += realBM.getName() + " : " + formate("PV", pv) + formate("Att", realBM.getBMAttaque())
+							+ formate("Esq", realBM.getBMEsquive()) + formate("Deg", realBM.getBMDegat())
+							+ formate("DLA", realBM.getBMDLA()) + formate("Reg", realBM.getBMRegeneration())
+							+ formate("Vue", realBM.getBMVue())
+							+ formate("Arm", realBM.getBMArmureMagique() + bm.getBMArmurePhysique())
+							+ formate("MM", realBM.getBMMM()) + formate("RM", realBM.getBMRM()) + "Durée " + duree
+							+ " tour(s)";
 					s3 += "\nLes effets se feront ressentir pendant " + duree + " tours.\n";
 				}
 				else
@@ -1253,9 +1265,9 @@ public class MHAGame implements Serializable {
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
 			BM bm=new BM("Armure éthérée", 0,0,0,0,0,0,0,0,currentTroll.getRegeneration(),0,0,false,2);
-			currentTroll.addBM(bm);
+			BM realBM = currentTroll.addBM(bm);
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
-			return s+"\nVous avez gagné "+currentTroll.getRegeneration()+" point d'armure pendant 2 tour(s)";
+			return s + "\nVous avez gagné " + realBM.getBMArmureMagique() + " point d'armure pendant 2 tour(s)";
 
 		}
 		else return s;
@@ -1269,9 +1281,9 @@ public class MHAGame implements Serializable {
 			int bonus=1+((currentTroll.getAttaque()-3)/2);
 			BM bm;
 			bm=new BM("Augmentation de l'attaque", bonus,0,0,0,0,0,0,0,0,0,0,false,2);
-			currentTroll.addBM(bm);
+			BM realBM = currentTroll.addBM(bm);
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
-			return s+"\nVous avez gagné "+bonus+" points d'attaque pendant 2 tour(s)";
+			return s + "\nVous avez gagné " + realBM.getBMAttaque() + " points d'attaque pendant 2 tour(s)";
 
 		}
 		else return s;
@@ -1283,9 +1295,9 @@ public class MHAGame implements Serializable {
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
 			BM bm=new BM("Augmentation de l'esquive",0,1+((currentTroll.getEsquiveTotale()-3)/2),0,0,0,0,0,0,0,0,0,false,2);
-			currentTroll.addBM(bm);
+			BM realBM = currentTroll.addBM(bm);
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
-			return s+"\nVous avez gagné "+(1+((currentTroll.getEsquiveTotale()-3)/2))+" points d'esquive pendant 2 tour(s)";
+			return s + "\nVous avez gagné " + realBM.getBMEsquive() + " points d'esquive pendant 2 tour(s)";
 
 		}
 		else return s;
@@ -1299,9 +1311,9 @@ public class MHAGame implements Serializable {
 			int bonus=1+((currentTroll.getDegat()-3)/2);
 			BM bm;
 			bm=new BM("Augmentation des dégats",0,0,bonus,0,0,0,0,0,0,0,0,false,2);
-			currentTroll.addBM(bm);
+			BM realBM = currentTroll.addBM(bm);
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
-			return s+"\nVous avez gagné "+(1+((currentTroll.getDegat()-3)/2))+" points de dégats pendant 2 tour(s)";
+			return s + "\nVous avez gagné " + realBM.getBMDegat() + " points de dégats pendant 2 tour(s)";
 
 		}
 		else return s;
@@ -1313,7 +1325,8 @@ public class MHAGame implements Serializable {
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
 			currentTroll.addBM(new BM("Bulle d'anti-magie",0,0,0,0,0,0,0,0,0,0,100,false,2));
-			currentTroll.addBM(new BM("Bulle d'anti-magie",0,0,0,0,0,0,0,0,0,-100,0,false,4));
+			currentTroll
+			.addBM(new BM("Bulle d'anti-magie (contre-coup)", 0, 0, 0, 0, 0, 0, 0, 0, 0, -100, 0, false, 4));
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
 			return s+"\nLes effets du sortilège se fera donc sentir pendant 2 et 4 tours";
 
@@ -1327,7 +1340,7 @@ public class MHAGame implements Serializable {
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
 			currentTroll.addBM(new BM("Bulle magique",0,0,0,0,0,0,0,0,0,100,0,false,2));
-			currentTroll.addBM(new BM("Bulle magique",0,0,0,0,0,0,0,0,0,0,-100,false,4));
+			currentTroll.addBM(new BM("Bulle magique (contre-coup)", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -100, false, 4));
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
 			return s+"\nLes effets du sortilège se fera donc sentir pendant 2 et 4 tours";
 
@@ -1385,18 +1398,19 @@ public class MHAGame implements Serializable {
 			if(jet<=seuil) {
 				int bonus=Math.max(1,malus/2);
 				String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLe sort a donc un EFFET REDUIT.";
-				s1+=s3+"\nLa cible aura donc un malus de "+bonus+" points de dégats 1 tour.";
-				s2+=s3+"\nVous avez donc un malus de "+bonus+" points de dégats pendant 1 tour.";
 				bm = new BM("Faiblesse Passagère ",0,0,0,-bonus,0,0,0,0,0,0,0,0,0,false,1);
-				t.addBM(bm);
+				BM realBM = t.addBM(bm);
+				s1 += s3 + "\nLa cible aura donc un malus de " + realBM.getBMDegat() + " points de dégats 1 tour.";
+				s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMDegat() + " points de dégats pendant 1 tour.";
 			}
 			else {
 				int bonus=Math.max(1,malus);
 				String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLa Cible subit donc pleinement l'effet du sortilège.";
-				s1+=s3+"\nLa cible aura donc un malus de "+bonus+" points de dégats pendant 2 tours.";
-				s2+=s3+"\nVous avez donc un malus de "+bonus+" points de dégats pendant 2 tours.";
 				bm = new BM("Faiblesse Passagère ",0,0,0,-bonus,0,0,0,0,0,0,0,0,0,false,2);
-				t.addBM(bm);
+				BM realBM = t.addBM(bm);
+				s1 += s3 + "\nLa cible aura donc un malus de " + realBM.getBMDegat()
+				+ " points de dégats pendant 2 tours.";
+				s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMDegat() + " points de dégats pendant 2 tours.";
 			}
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège sur "+t.getName()+" ("+t.getId()+")");
 			t.getInbox().add(s2);
@@ -1433,21 +1447,23 @@ public class MHAGame implements Serializable {
 				{
 					int bonus=Math.max(1,malus/2);
 					String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLe sort a donc un EFFET REDUIT.";
-					s+=s3+"\nLa cible aura donc un malus de "+Math.max(1,malus/2)+" points en attaque, esquive et vue.";
-					s2+=s3+"\nVous avez donc un malus de "+Math.max(1,malus/2)+" points en attaque, esquive et vue.";
 					bm = new BM("Flash Aveuglant",-bonus,0,-Math.max(1,malus/2), 0, 0, 0, 0,-Math.max(1,malus/2),0, 0, 0,0,0, false, 1);
-					t.addBM(bm);
-
+					BM realBM = t.addBM(bm);
+					s += s3 + "\nLa cible aura donc un malus de " + realBM.getBMAttaque()
+					+ " points en attaque, esquive et vue.";
+					s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMAttaque()
+					+ " points en attaque, esquive et vue.";
 				}
 				else
 				{
 					int bonus=Math.max(1,malus);
 					String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLa Cible subit donc pleinement l'effet du sortilège.";
-					s+=s3+"\nLa cible aura donc un malus de "+Math.max(1,malus)+" points en attaque, esquive et vue.";
-					s2+=s3+"\nVous avez donc un malus de "+Math.max(1,malus)+" points en attaque, esquive et vue.";
 					bm = new BM("Flash Aveuglant",-bonus,0,-Math.max(1,malus), 0, 0, 0, 0,-Math.max(1,malus),0, 0, 0,0,0, false, 2);
-					t.addBM(bm);
-
+					BM realBM = t.addBM(bm);
+					s += s3 + "\nLa cible aura donc un malus de " + realBM.getBMAttaque()
+					+ " points en attaque, esquive et vue.";
+					s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMAttaque()
+					+ " points en attaque, esquive et vue.";
 				}
 				events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège sur "+t.getName()+" ("+t.getId()+")");
 				t.getInbox().add(s2);
@@ -1530,9 +1546,13 @@ public class MHAGame implements Serializable {
 							diceHelper.roll(1 + currentTroll.getPVTotaux() / 30, 3) / 2, 0, 0, 0, 0, false,
 							(1 + currentTroll.getVue() / 5) / 2);
 				}
-				t.addBM(bm);
-				t.getInbox().add(t.getInbox().remove(t.getInbox().size()-1)+"\nCette attaque provoque un malus de Poison de  "+Math.abs(bm.getVenin())+" pour vos "+bm.getDuree()+" prochains tour(s)");
-				return s+="\nCette attaque provoque un malus de Poison de  "+Math.abs(bm.getVenin())+" pour ses "+bm.getDuree()+" prochains tour(s)";
+				BM realBM = t.addBM(bm);
+				t.getInbox()
+				.add(t.getInbox().remove(t.getInbox().size() - 1)
+						+ "\nCette attaque provoque un malus de Poison de  " + Math.abs(realBM.getVenin())
+						+ " pour vos " + realBM.getDuree() + " prochains tour(s)");
+				return s += "\nCette attaque provoque un malus de Poison de  " + Math.abs(realBM.getVenin())
+				+ " pour ses " + realBM.getDuree() + " prochains tour(s)";
 			}
 		}
 		return s;
@@ -1696,9 +1716,12 @@ public class MHAGame implements Serializable {
 				bm=new BM("Rafale Psychique", 0,0,0,0,-currentTroll.getDegat(),0,0,0,0,0,0,false,2);
 			else
 				bm=new BM("Rafale Psychique", 0,0,0,0,-currentTroll.getDegat(),0,0,0,0,0,0,false,1);
-			t.addBM(bm);
-			t.getInbox().add(t.getInbox().remove(t.getInbox().size()-1)+"\nDe plus vous aurez un malus de "+Math.abs(bm.getBMRegeneration())+" de régénération pendant "+bm.getDuree()+" tour(s)");
-			return s+="\nDe plus il aura un malus de "+Math.abs(bm.getBMRegeneration())+" de régénération pendant "+bm.getDuree()+" tour(s)";
+			BM realBM = t.addBM(bm);
+			t.getInbox().add(t.getInbox().remove(t.getInbox().size() - 1) + "\nDe plus vous aurez un malus de "
+					+ Math.abs(realBM.getBMRegeneration()) + " de régénération pendant " + realBM.getDuree()
+					+ " tour(s)");
+			return s += "\nDe plus il aura un malus de " + Math.abs(realBM.getBMRegeneration())
+			+ " de régénération pendant " + realBM.getDuree() + " tour(s)";
 
 		}
 		else return s;
@@ -1815,9 +1838,9 @@ public class MHAGame implements Serializable {
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
 			BM bm = new BM("Vision Accrue",0,0,0,0,0,currentTroll.getVue()/2,0,0,0,0,0,false,2);
-			currentTroll.addBM(bm);
+			BM realBM = currentTroll.addBM(bm);
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège");
-			s += "\nvous bénéficiez d'un bonus de vue de " + (currentTroll.getVue()/2) + " cases pour les 2 prochains tours";
+			s += "\nvous bénéficiez d'un bonus de vue de " + realBM.getBMVue() + " cases pour les 2 prochains tours";
 		}
 		return s;
 	}
@@ -1873,17 +1896,17 @@ public class MHAGame implements Serializable {
 			BM bm;
 			if(jet<=seuil) {
 				String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLe sort a donc un EFFET REDUIT.";
-				s1+=s3+"\nLa cible aura donc un malus de "+Math.max(1,(currentTroll.getVue()/3)/2)+" en vue pendant 1 tour.";
-				s2+=s3+"\nVous avez donc un malus de "+Math.max(1,(currentTroll.getVue()/3)/2)+" en vue pendant 1 tour.";
 				bm = new BM("Vue Troublée",0,0,0,0,0,-Math.max(1,(currentTroll.getVue()/3)/2),0,0,0,0,0,false,1);
-				t.addBM(bm);
+				BM realBM = t.addBM(bm);
+				s1 += s3 + "\nLa cible aura donc un malus de " + realBM.getBMVue() + " en vue pendant 1 tour.";
+				s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMVue() + " en vue pendant 1 tour.";
 			}
 			else {
 				String s3="\nSeuil de Résistance de la Cible.....: "+seuil+" %\nJet de Résistance...........................: "+jet+"\nLa Cible subit donc pleinement l'effet du sortilège.";
-				s1+=s3+"\nLa cible aura donc un malus de "+Math.max(1,currentTroll.getVue()/3)+" en vue pendant 2 tours.";
-				s2+=s3+"\nVous avez donc un malus de "+Math.max(1,currentTroll.getVue()/3)+" en vue pendant 2 tours.";
 				bm = new BM("Vue Troublée",0,0,0,0,0,-Math.max(1,currentTroll.getVue()/3),0,0,0,0,0,false,2);
-				t.addBM(bm);
+				BM realBM = t.addBM(bm);
+				s1 += s3 + "\nLa cible aura donc un malus de " + realBM.getBMVue() + " en vue pendant 1 tour.";
+				s2 += s3 + "\nVous avez donc un malus de " + realBM.getBMVue() + " en vue pendant 1 tour.";
 			}
 			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé un sortilège sur "+t.getName()+" ("+t.getId()+")");
 			t.getInbox().add(s2);
