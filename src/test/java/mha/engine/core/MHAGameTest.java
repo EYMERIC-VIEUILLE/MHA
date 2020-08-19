@@ -19,24 +19,44 @@
 
 package mha.engine.core;
 
-public class  Test{
+import org.junit.Assert;
+import org.junit.Test;
+
+public class  MHAGameTest{
 
 	private MHAGame MHAGameTest;
 	private String toto="jetestecompare";
 
-	public Test(){
+	public MHAGameTest() {
 		MHAGameTest=new MHAGame();
 	}
 
-	private void addtroll (){
+	@Test
+	public void testTrollMove() {
+		MHAGameTest instTest = new MHAGameTest();
+		instTest.addtroll();
+		Assert.assertEquals("0 0 0", instTest.MHAGameTest.getTrollById(12345).getPos());
+		Assert.assertEquals("0 0 0", instTest.MHAGameTest.getTrollById(23456).getPos());
+		instTest.startgame();
+		instTest.newTurn();
+		// instTest.deplaceTrolls(instTest.MHAGameTest.getCurrentTroll());
+		System.out.println(instTest.MHAGameTest.getTrollById(12345).getPos());
+		System.out.println(instTest.MHAGameTest.getTrollById(23456).getPos());
+		instTest.attaque(false);
+		System.out.println(instTest.MHAGameTest.getTrollById(12345).getPos());
+		System.out.println(instTest.MHAGameTest.getTrollById(23456).getPos());
+	}
+
+	private void addtroll() {
 		if(MHAGameTest.addTroll(new Troll("TOTO",12345,1,0,Troll.RACE_KASTAR))){System.out.println("création troll 1 ok");}
 		MHAGameTest.getTrollById(12345).setProfil(50,3,9,18,4,1,80,6,600,50,30);
 		for(int i=1;i<=14;i++)
 			MHAGameTest.getTrollById(12345).addComp(i,90,1);
 		for(int i=1;i<=44;i++)
 			MHAGameTest.getTrollById(12345).addSort(i,80);
-		if(MHAGameTest.getTrollById(12345).verifNiveau()){System.out.println("Upload du profil ok");}
-		if(MHAGameTest.addTroll(new Troll("TUTU",23456,1,0,Troll.RACE_SKRIM))){System.out.println("création troll 2 ok");}
+		Assert.assertTrue("Pb d'upload du profil", MHAGameTest.getTrollById(12345).verifNiveau());
+		Assert.assertTrue("Pb création troll 2",
+				MHAGameTest.addTroll(new Troll("TUTU", 23456, 1, 0, Troll.RACE_SKRIM)));
 	}
 
 	private void newTurn(){
@@ -102,20 +122,4 @@ public class  Test{
 			}
 		}
 	}
-
-	public static void main(String[] args) {
-		Test instTest=new Test();
-		instTest.addtroll();
-		System.out.println(instTest.MHAGameTest.getTrollById(12345).getPos());
-		System.out.println(instTest.MHAGameTest.getTrollById(23456).getPos());
-		instTest.startgame();
-		instTest.newTurn();
-		//instTest.deplaceTrolls(instTest.MHAGameTest.getCurrentTroll());
-		System.out.println(instTest.MHAGameTest.getTrollById(12345).getPos());
-		System.out.println(instTest.MHAGameTest.getTrollById(23456).getPos());
-		instTest.attaque(false);
-		System.out.println(instTest.MHAGameTest.getTrollById(12345).getPos());
-		System.out.println(instTest.MHAGameTest.getTrollById(23456).getPos());
-	}
-
 }

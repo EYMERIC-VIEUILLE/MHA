@@ -54,7 +54,7 @@ addsort num pourcentage : indique que l'on a le sort n° num à pourcentage %
       22 = VL
       23 = VLC
       24 = VT
-addequip id type Att Esq Deg DLA reg pv vue armure_physique armure_magique effet_de_zone bidouille poids(en minute) mm rm est_équipé nom
+addequip id type Att Esq Deg DLA reg ArN pv vue armure_physique armure_magique effet_de_zone bidouille poids(en minute) mm rm est_équipé nom
      Ajoute un équipement. est_équipé vaut 1 si l'équipement est équipé. effet_de_zone vaut 1 pour les potions à effet de zone et bidouille ne sert à rien pour l'instant (à mettre à 0)  Les différentes valeurs de type
       ARMURE=0;
       BOUCLIER=1;

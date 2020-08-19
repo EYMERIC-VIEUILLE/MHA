@@ -32,8 +32,8 @@ Si vous lisez ceci, vous avez déjà téléchargé mha.zip. Vous pouvez toujours véri
 Ah si, c'est mieux de connaître les règles de MH pour jouer à MHA. Sinon d'une part vous ne comprendrez rien, et d'autre part vous aurez du mal à nous faire des remarques sur les éventuels bugs, améliorations, etc.
 
 Pour jouer :
- - sous Windows, double-cliquer sur le fichier "SimpleGUI.cmd" ou directement sur le fichier MHA.jar
- - sous Linux, demandez à Tilk
+ - sous Windows, double-cliquer sur le fichier "bin/MHA.bat"
+ - sous Linux, exécuter le fichier "bin/MHA" dans une console
  - sous Mac, demandez à quelqu'un qui a un Mac et/ou qui sait comment ça marche
 
 3/ Import de Troll
