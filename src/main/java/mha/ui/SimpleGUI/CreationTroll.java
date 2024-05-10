@@ -98,10 +98,10 @@ ChangeListener {
 	final int[] piInitCoutCaracsParRace = { 16, 16, 16, 30, 30, 16, 16, 18 };
 	final int[] nbInitCaracs = { 3, 3, 3, 1, 1, 30, 3, 720 };
 	final int[] nbInitCaracsParRace = { 3, 3, 3, 1, 1, 30, 3, 720 };
-	final String[] competences_reservees = { "Botte secrète", "Régénération accrue","Accélération du métabolisme", "Camouflage"};
+	final String[] competences_reservees = { "Botte secrète", "Régénération accrue","Accélération du métabolisme", "Camouflage", "Balayage"};
 	final String[] competences = {"Charger", "Poser un piége", "Contre-attaque","Déplacement éclair", "Frénésie", "Lancer de potion", "Pistage" };
 	final String[] competences_niveau_sup = {"Attaque précise","Coup de butoir", "Parer",};
-	final String[] sorts = { "Hypnotisme", "Rafale Psychique", "Vampirisme","Projectile magique", "Analyse anatomique", "Armure éthérée","Augmentation de l'attaque", "Augmentation de l'esquive","Augmentation des dégats", "Bulle Anti-magie", "Bulle magique","Explosion", "Faiblesse passagére", "Flash aveuglant", "Glue","Griffe du sorcier", "Invisibilité", "Projection", "Sacrifice","Téléportation", "Vision accrue", "Vision lointaine","Voir le caché", "Vue troublée" };
+	final String[] sorts = { "Hypnotisme", "Rafale Psychique", "Vampirisme","Projectile magique", "Siphon des ames", "Analyse anatomique", "Armure éthérée","Augmentation de l'attaque", "Augmentation de l'esquive","Augmentation des dégats", "Bulle Anti-magie", "Bulle magique","Explosion", "Faiblesse passagére", "Flash aveuglant", "Glue","Griffe du sorcier", "Invisibilité", "Projection", "Sacrifice","Téléportation", "Vision accrue", "Vision lointaine","Voir le caché", "Vue troublée" };
 	final String[] equipementColonnes = {"Id","Nom","Type","Caracs"};
 	//final String[][] equipementLignes;
 	final int[] piCoutComp_reservees = { 0, 0, 0, 0 };
@@ -119,11 +119,11 @@ ChangeListener {
 
 	final JTextField[] pourcentSort = new JTextField[sorts.length];
 	final JCheckBox[] sortCheckBox = new JCheckBox[sorts.length];
-	final String[] racesArray = { "Skrim", "Durakuir", "Kastar", "Tomawak" };
+	final String[] racesArray = { "Skrim", "Durakuir", "Kastar", "Tomawak", "Darkling" };
 	final JLabel avatar;
-	final int[] caracSpecialisee = { 0, 4, 2, 5 };
-	final int[] sortSpecialise = { 0, 1, 2, 3 };
-	final int[] compSpecialisee = { 0, 1, 2, 3 };
+	final int[] caracSpecialisee = { 0, 5, 2, 6, 3 };
+	final int[] sortSpecialise = { 0, 1, 2, 3, 4 };
+	final int[] compSpecialisee = { 0, 1, 2, 3, 4 };
 	final JTextField[] mouchesFields = { new JTextField(3), new JTextField(3),new JTextField(3), new JTextField(3), new JTextField(3),new JTextField(3), new JTextField(3) };
 	final String[] mouchesFieldsText = { "Crobate", "Vertie", "Lunettes","Miel", "Xidant", "Rivatant", "Nabolisants" };
 	final int[] mouchesInt = { 0, 1, 2, 3, 4, 5, 8 };
@@ -599,7 +599,7 @@ ChangeListener {
 			pourcentSort[i].setColumns(2);
 			jpg.add(pourcentSort[i]);
 			gbc.gridx++;
-			if (i < 4) {
+			if (i < 5) {
 				sortCheckBox[i].setEnabled(false);
 			}
 		}
@@ -835,8 +835,14 @@ ChangeListener {
 			if (raceCombo.getSelectedItem() == racesArray[i]) {
 				isRAZ = true;
 				remiseAZero();
-				nbInitCaracsParRace[caracSpecialisee[i]] = 4 * nbInitCaracs[caracSpecialisee[i]] / 3;
-				piInitCoutCaracsParRace[caracSpecialisee[i]] = 12;
+				if(raceCombo.getSelectedItem().equals("Darkling")) {
+					piInitCoutCaracsParRace[caracSpecialisee[i]] = 22;
+					nbInitCaracsParRace[caracSpecialisee[i]] = 2;
+				}
+				else {
+					piInitCoutCaracsParRace[caracSpecialisee[i]] = 12;
+					nbInitCaracsParRace[caracSpecialisee[i]] = 4 * nbInitCaracs[caracSpecialisee[i]] / 3;
+				}
 				amelioPlusInit[caracSpecialisee[i]].setText(4
 						* nbInitCaracs[caracSpecialisee[i]] / 3 + " "
 						+ uniteCaracs[caracSpecialisee[i]]);
@@ -1065,13 +1071,13 @@ ChangeListener {
 						}
 						else if (ls2[0].toLowerCase().equals("addcomp")) {
 							int nbComp = Integer.parseInt(ls2[1]);
-							if(nbComp<=4)
+							if(nbComp<=5)
 							{
 								compCheckBox_reservees[nbComp-1].setSelected(true);
 								pourcentComp_reservees[nbComp-1].setText(ls2[2]);
 								pourcentComp_reservees[nbComp-1].setEnabled(true);
 							}
-							else if(nbComp == 5)
+							else if(nbComp == 6)
 							{
 								int level = 1;
 								if(ls2.length==4)
@@ -1086,7 +1092,7 @@ ChangeListener {
 									compSpinner[0].setValue(level);
 								}
 							}
-							else if(nbComp == 9 )
+							else if(nbComp == 10 )
 							{
 								int level = 1;
 								if(ls2.length==4)
@@ -1100,7 +1106,7 @@ ChangeListener {
 									compSpinner[1].setValue(level);
 								}
 							}
-							else if(nbComp == 13 )
+							else if(nbComp == 14 )
 							{
 								int level = 1;
 								if(ls2.length==4)
@@ -1114,23 +1120,23 @@ ChangeListener {
 									compSpinner[2].setValue(level);
 								}
 							}
-							else if(nbComp>5 && nbComp<9)
-							{
-								compCheckBox[nbComp-6].setSelected(true);
-								pourcentComp[nbComp-6].setText(ls2[2]);
-								pourcentComp[nbComp-6].setEnabled(true);
-							}
-							else if(nbComp<13)
+							else if(nbComp>6 && nbComp<10)
 							{
 								compCheckBox[nbComp-7].setSelected(true);
 								pourcentComp[nbComp-7].setText(ls2[2]);
 								pourcentComp[nbComp-7].setEnabled(true);
 							}
-							else if(nbComp<15)
+							else if(nbComp<14)
 							{
 								compCheckBox[nbComp-8].setSelected(true);
 								pourcentComp[nbComp-8].setText(ls2[2]);
 								pourcentComp[nbComp-8].setEnabled(true);
+							}
+							else if(nbComp<16)
+							{
+								compCheckBox[nbComp-9].setSelected(true);
+								pourcentComp[nbComp-9].setText(ls2[2]);
+								pourcentComp[nbComp-9].setEnabled(true);
 							}
 
 						}
@@ -1582,20 +1588,22 @@ ChangeListener {
 						return;
 					}
 					if(i<=2)
-						nbComp = i+6;
-					else
 						nbComp = i+7;
+					else if(i<=5)
+						nbComp = i+8;
+					else
+						nbComp = i+9;
 					addCompLine += "addcomp " + nbComp + " "
 							+ pourcentComp[i].getText() + " 1\n";
 				}
 			}
 			for (int i = 0; i < competences_niveau_sup.length; i++) {
 				if (compCheckBox_niveau_sup[i].isSelected()) {
-					int nbComp=5;
+					int nbComp=6;
 					if(i==1)
-						nbComp = 9;
+						nbComp = 10;
 					if(i==2)
-						nbComp = 13;
+						nbComp = 14;
 					int level=1;
 					try {
 						level = Integer.parseInt(compSpinner[i].getValue().toString());

@@ -51,6 +51,8 @@ public class InfoTroll {
 		r="Kastar";
 	else if(race==3)
 		r="Tomawak";
+	else if(race==4)
+		r="Darkling";
 	return r;
     }
 

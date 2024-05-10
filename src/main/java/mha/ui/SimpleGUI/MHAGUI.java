@@ -1298,11 +1298,11 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		}
 	}
 
-	public final static String[] NOM_ACTION={"*** Choisissez une action ***","Se déplacer","Attaquer","Utiliser une potion/parchemin","Se concentrer","Terminer de jouer","Finir de jouer plus tard","Décaler sa DLA"};
-	public final static int[] COUT_ACTION={0,1,4,2,1,0,1,0};
-	public final static int[] COUT_COMP={2,2,2,2,4,4,4,2,4,1,6,2,2,1};
+	public final static String[] NOM_ACTION={"*** Choisissez une action ***", "Se relever", "Se déplacer","Attaquer","Utiliser une potion/parchemin","Se concentrer","Terminer de jouer","Finir de jouer plus tard","Décaler sa DLA"};
+	public final static int[] COUT_ACTION={0,2,1,4,2,1,0,1,0};
+	public final static int[] COUT_COMP={2,2,2,2,2,4,4,4,2,4,1,6,2,2,1};
 	//public final static int[] COUT_SORT={4,4,4,4,1,2,2,2,2,2,2,6,2,2,2,4,3,2,2,6,2,2,2,2,2,2,2,2};
-	public final static int[] COUT_SORT={4,4,4,4,1,2,2,2,2,2,2,6,2,2,2,4,3,2,2,6,2,2,2,2};
+	public final static int[] COUT_SORT={4,4,4,4,4,1,2,2,2,2,2,2,6,2,2,2,4,3,2,2,6,2,2,2,2};
 	public final int[] convertSort2Check = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,19,21,22,24,25,26,27,14,18,20,23};
 	public final int[] convertCheck2Sort = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,25,15,16,17,26,18,27,19,20,28,21,22,23,24};
 
@@ -1332,7 +1332,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			int i=j;
 			//System.out.println(i+" "+j+" "+COUT_SORT.length+" "+sorts.length);
 			if(COUT_SORT[i]<=nbPA && sorts[i]>0)
-				if((i!=16 || useInvi) && (i!=19 || useTP))
+				if((i!=17 || useInvi) && (i!=20 || useTP))
 					actionComboBox.addItem(Troll.NOM_SORT[i]);
 		}
 		if(nbPA==0)
@@ -2100,10 +2100,15 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 		switch(id)
 		{
 		case 0: return;
-		case 1: dialogDeplacement("deplace ");return;
-		case 2: dialogTrollCible("Attaquer :","attaque ");return;
-		case 3: dialogTrollPopo(false);return;
-		case 4: String s1 = (String)JOptionPane.showInputDialog(gui,
+		case 1:
+			mha.parser("releve");
+			mha.parser("getpa");
+			mha.parser("getfullprofil");
+				return;
+		case 2: dialogDeplacement("deplace ");return;
+		case 3: dialogTrollCible("Attaquer :","attaque ");return;
+		case 4: dialogTrollPopo(false);return;
+		case 5: String s1 = (String)JOptionPane.showInputDialog(gui,
 				"Pendant combien de PA voulez-vous vous concentrer ?",
 				"Se concentrer",
 				JOptionPane.PLAIN_MESSAGE,
@@ -2115,8 +2120,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			mha.parser("concentre "+s1);
 		}
 		return;
-		case 5: mha.parser("enddla");dlaActive=false;return;
-		case 6: s = (String)JOptionPane.showInputDialog(gui,
+		case 6: mha.parser("enddla");dlaActive=false;return;
+		case 7: s = (String)JOptionPane.showInputDialog(gui,
 				"Dans combien de minutes voulez-vous finir votre tour de jeu ?",
 				"Jouer plus tard",
 				JOptionPane.PLAIN_MESSAGE,
@@ -2128,7 +2133,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			mha.parser("decaletour "+i);
 		}
 		return;
-		case 7: s = (String)JOptionPane.showInputDialog(gui,
+		case 8: s = (String)JOptionPane.showInputDialog(gui,
 				"De combien de minutes voulez-vous décaler votre DLA ?",
 				"Décalage de DLA",
 				JOptionPane.PLAIN_MESSAGE,
@@ -2157,14 +2162,14 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				mha.parser("comp "+(id+1));
 			}
 			//les cas Charger et pistage sont différents
-			else if(MHAServer.listeCompetences[id].length==2 && MHAServer.listeCompetences[id][1].equals("Troll") && id!=5 && id!=13)
+			else if(MHAServer.listeCompetences[id].length==2 && MHAServer.listeCompetences[id][1].equals("Troll") && id!=6 && id!=14)
 				dialogTrollCible("Utiliser la compétence "+s+" sur :","comp "+(id+1)+" ");
-			else if(id==5)
+			else if(id==6)
 				dialogAllVisibleTroll("Utiliser la compétence "+s+" sur :","comp "+(id+1)+" ");
-			else if(id==13)
+			else if(id==14)
 				dialogAllTroll("Utiliser la compétence "+s+" sur :","comp "+(id+1)+" ");
-			else if(id==9)
-				dialogDeplacement("comp 10 ");
+			else if(id==10)
+				dialogDeplacement("comp 11 ");
 			else if(id==2)
 			{
 				String s1 = (String)JOptionPane.showInputDialog(gui,
@@ -2179,7 +2184,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 					mha.parser("comp 3 "+s1);
 				}
 			}
-			else if(id==11)
+			else if(id==12)
 				dialogTrollPopo(true);
 			return;
 		}
@@ -2848,6 +2853,8 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				pro+="<B><FONT COLOR=\"#FF0000\">[Camouflé]</FONT></B><br>";
 			if(ls.length>34 && ls[34].equals("1"))
 				pro+="<B><FONT COLOR=\"#FF0000\">[Invisible]</FONT></B><br>";
+			if(ls.length>35 && ls[35].equals("1"))
+				pro+="<B><FONT COLOR=\"#FF0000\">[A terre]</FONT></B><br>";
 			pro+=	"</td>"+
 					"  </tr>"+
 					"  <tr> "+

@@ -961,6 +961,58 @@ public class MHAGame implements Serializable {
 		else return s;
 	}
 
+	public String balayage(Troll t)
+	{
+		if(!t.isVisibleFrom(currentTroll.getPosX(),currentTroll.getPosY(),currentTroll.getPosN(),0))
+		{
+			return "Error: Cible hors de portée";
+		}
+		if(t.isATerre())
+		{
+			return "Error: Cible déjà à terre";
+		}
+		if(currentTroll==t)
+		{
+			return "Error: Pas de flagellation !";
+		}
+		Object[] lo=competence(currentTroll, Troll.COMP_BALAYAGE,2);
+		String s= lo[1].toString();
+		if(((Integer) lo[0]) > 0)
+		{
+			int stabilite = currentTroll.getAttaque();
+			int jetStabilite = diceHelper.roll(stabilite, 6)+currentTroll.getBMAttaque()+currentTroll.getBMMAttaque();
+			int agilite = 2 * (t.getRegeneration() + t.getEsquive()) / 3;
+			int jetAgilite = diceHelper.roll(agilite, 6)+t.getBMEsquive()+t.getBMMEsquive();
+
+			s+= "\nVotre jet de déstabilisation est de : " + jetStabilite + ".\n";
+			s+= "\nLe jet de stabilité de votre adversaire est de : "+ jetAgilite +".\n";
+
+			events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") a utilisé une compétence");
+
+			//Balayage critique : on déclenche les pièges
+			String targetMsg = "Vous avez été mis à terre par " + currentTroll.getName() + " ( " + currentTroll.getId() + " ) ";
+			if(jetStabilite >= 2* jetAgilite) {
+				t.metATerre();
+				s += "\nVous avez donc MIS A TERRE votre adversaire par un coup critique.\n";
+				t.getInbox().add(targetMsg);
+				Lieu l=getLieuFromPosition(currentTroll.getPosX(),currentTroll.getPosY(),currentTroll.getPosN());
+				if(l!= null && l instanceof Piege)
+					s+=appliquePiege((Piege) l);
+			}
+			//Si le balayage reussi, on met à terre le troll
+			else if(jetStabilite > jetAgilite) {
+				t.metATerre();
+				t.getInbox().add(targetMsg);
+				s+="\nVous avez donc MIS A TERRE votre adversaire.\n";
+			}
+			else {
+				s+="\nLe troll "+t.getId()+" a esquivé votre balayage.";
+			}
+		}
+		
+		return s;
+	}
+
 	public String camouflage()
 	{
 		if(currentTroll.getCamouflage())
@@ -1648,6 +1700,38 @@ public class MHAGame implements Serializable {
 		else return s;
 	}
 
+	public String siphonAmes(Troll t)
+	{
+		if(!t.isVisibleFrom(currentTroll.getPosX(),currentTroll.getPosY(),currentTroll.getPosN(),0))
+		{
+			return "Error: Cible hors de portée";
+		}
+		if(currentTroll==t)
+		{
+			return "Error: Pas de flagellation !";
+		}
+		String s=sortilege(currentTroll, Troll.SORT_SIPHON_AMES,4);
+		if(s.indexOf("RÉUSSI")!=-1)
+		{
+			s += "\n" + lowLevelAttaque(" avec un sortilège", currentTroll , t , currentTroll.getAttaque(), currentTroll.getBMMAttaque() , t.getEsquive(), t.getBMEsquive()+t.getBMMEsquive(), calculeSeuil(currentTroll.getMM(),t.getRM()) , currentTroll.getRegeneration(),(3*(currentTroll.getRegeneration()/2))/2,currentTroll.getBMMDegat(),t.getArN(),0,100,false);
+			if(s.indexOf("TOUCHÉ")!=-1) {
+				BM bm;
+				if(s.indexOf("EFFET REDUIT")==-1)
+					bm=new BM("Nécrose", -currentTroll.getRegeneration(),0,0,0,0,0,0,0,0,0,0,false,2);
+				else
+					bm=new BM("Nécrose", -currentTroll.getRegeneration(),0,0,0,0,0,0,0,0,0,0,false,1);
+				BM realBM = t.addBM(bm);
+				t.getInbox().add(t.getInbox().remove(t.getInbox().size() - 1) + "\nDe plus vous aurez un malus de "
+						+ Math.abs(realBM.getBMAttaque()) + " d'attaque pendant " + realBM.getDuree()
+						+ " tour(s)");
+				return s += "\nDe plus il aura un malus de " + Math.abs(realBM.getBMAttaque())
+				+ " d'attaque pendant " + realBM.getDuree() + " tour(s)";
+			}
+			else return s;
+		}
+		else return s;
+	}
+
 	public String projection(Troll t)
 	{
 		if(!t.isVisibleFrom(currentTroll.getPosX(),currentTroll.getPosY(),currentTroll.getPosN(),0))
@@ -2203,6 +2287,31 @@ public class MHAGame implements Serializable {
 		}
 		p.getCreateur().getInbox().add(s1);
 		listeLieux.removeElement(p);
+		return s;
+	}
+
+	public String releve(Troll t)
+	{
+		String s="\nVous vous êtes relevé.\n";
+		if(currentTroll.isDead())
+		{
+			return "Error: Un troll mort ne peut se relever";
+		}
+		if(2>currentTroll.getPA())
+		{
+			return "Error: You need 2 PA to get up";
+		}
+		if(!currentTroll.isATerre())
+		{
+			return "Error: Le troll n'est pas à terre.";
+		}
+		currentTroll.setPA(currentTroll.getPA()-2);
+		currentTroll.addPAUtil(2);
+		currentTroll.setConcentration(Math.max(0,t.getConcentration()-2));
+		currentTroll.releve();
+		events.add(current_time+" "+currentTroll.getName()+" ("+currentTroll.getId()+") s'est relevé.");
+		currentTroll.getInbox().add("Vous vous êtes relevé.");
+
 		return s;
 	}
 

@@ -137,7 +137,7 @@ public class BM {
     {
     	return glue;
     }
-    
+
     public int getBMAttaque()
     {
     	return bmAttaque;

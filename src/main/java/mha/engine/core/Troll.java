@@ -36,56 +36,59 @@ public class Troll {
 	public final static int RACE_DURAKUIR   = 1;
 	public final static int RACE_KASTAR        = 2;
 	public final static int RACE_TOMAWAK = 3;
+	public final static int RACE_DARKLING = 4;
 
-	public final static int NB_COMP=14;
+	public final static int NB_COMP=15;
 	public final static int COMP_BOTTE_SECRETE = 1;
 	public final static int COMP_REGENERATION_ACCRUE = 2;
 	public final static int COMP_ACCELERATION_DU_METABOLISME = 3;
 	public final static int COMP_CAMOUFLAGE = 4;
-	public final static int COMP_AP = 5;
-	public final static int COMP_CHARGER = 6;
-	public final static int COMP_PIEGE = 7;
-	public final static int COMP_CONTREATTAQUE = 8;
-	public final static int COMP_CDB = 9;
-	public final static int COMP_DE = 10;
-	public final static int COMP_FRENESIE = 11;
-	public final static int COMP_LDP = 12;
-	public final static int COMP_PARER = 13;
-	public final static int COMP_PISTAGE = 14;
+	public final static int COMP_BALAYAGE = 5;
+	public final static int COMP_AP = 6;
+	public final static int COMP_CHARGER = 7;
+	public final static int COMP_PIEGE = 8;
+	public final static int COMP_CONTREATTAQUE = 9;
+	public final static int COMP_CDB = 10;
+	public final static int COMP_DE = 11;
+	public final static int COMP_FRENESIE = 12;
+	public final static int COMP_LDP = 13;
+	public final static int COMP_PARER = 14;
+	public final static int COMP_PISTAGE = 15;
 
 	private DiceHelper diceHelper = new DiceHelper();
 
-	private final int[] coutPX={0,1,1,1,1,5,5,5,2,5,2,10,3,2,1};
+	private final int[] coutPX={0,1,1,1,1,1,5,5,5,2,5,2,10,3,2,1};
 
-	public final static String[] NOM_COMP={"Botte secrète","Régénération accrue","Accélération du métabolisme","Camouflage","Attaque précise","Charger","Poser un piège","Contre-attaque","Coup de butoir","Déplacement éclair","Frénésie","Lancer de potion","Parer","Pistage"};
+	public final static String[] NOM_COMP={"Botte secrète","Régénération accrue","Accélération du métabolisme","Camouflage","Balayage","Attaque précise","Charger","Poser un piège","Contre-attaque","Coup de butoir","Déplacement éclair","Frénésie","Lancer de potion","Parer","Pistage"};
 
-	public final static int NB_SORT=24;
+	public final static int NB_SORT=25;
 	public final static int SORT_HYPNOTISME = 1;
 	public final static int SORT_RAFALE_PSYCHIQUE = 2;
 	public final static int SORT_VAMPIRISME = 3;
 	public final static int SORT_PROJECTILE_MAGIQUE = 4;
-	public final static int SORT_AA = 5;
-	public final static int SORT_AE = 6;
-	public final static int SORT_ADA = 7;
-	public final static int SORT_ADE = 8;
-	public final static int SORT_ADD = 9;
-	public final static int SORT_BAM = 10;
-	public final static int SORT_BUM = 11;
-	public final static int SORT_EXPLOSION = 12;
-	public final static int SORT_FP = 13;
-	public final static int SORT_FA = 14;
-	public final static int SORT_GLUE = 15;
-	public final static int SORT_GDS = 16;
-	public final static int SORT_INVISIBILITE = 17;
-	public final static int SORT_PROJECTION = 18;
-	public final static int SORT_SACRIFICE = 19;
-	public final static int SORT_TELEPORTATION = 20;
-	public final static int SORT_VA = 21;
-	public final static int SORT_VL = 22;
-	public final static int SORT_VLC = 23;
-	public final static int SORT_VT = 24;
+	public final static int SORT_SIPHON_AMES = 5;
+	public final static int SORT_AA = 6;
+	public final static int SORT_AE = 7;
+	public final static int SORT_ADA = 8;
+	public final static int SORT_ADE = 9;
+	public final static int SORT_ADD = 10;
+	public final static int SORT_BAM = 11;
+	public final static int SORT_BUM = 12;
+	public final static int SORT_EXPLOSION = 13;
+	public final static int SORT_FP = 14;
+	public final static int SORT_FA = 15;
+	public final static int SORT_GLUE = 16;
+	public final static int SORT_GDS = 17;
+	public final static int SORT_INVISIBILITE = 18;
+	public final static int SORT_PROJECTION = 19;
+	public final static int SORT_SACRIFICE = 20;
+	public final static int SORT_TELEPORTATION = 21;
+	public final static int SORT_VA = 22;
+	public final static int SORT_VL = 23;
+	public final static int SORT_VLC = 24;
+	public final static int SORT_VT = 25;
 
-	public final static String[] NOM_SORT={"Hypnotisme","Rafale Psychique","Vampirisme","Projectile magique","Analyse anatomique","Armure éthérée","Augmentation de l'attaque","Augmentation de l'esquive","Augmentation des dégats","Bulle Anti-magie","Bulle magique","Explosion","Faiblesse passagère","Flash aveuglant","Glue","Griffe du sorcier","Invisibilité","Projection","Sacrifice","Téléportation","Vision accrue","Vision lointaine","Voir le caché","Vue troublée"};
+	public final static String[] NOM_SORT={"Hypnotisme","Rafale Psychique","Vampirisme","Projectile magique", "Siphon des âmes", "Analyse anatomique","Armure éthérée","Augmentation de l'attaque","Augmentation de l'esquive","Augmentation des dégats","Bulle Anti-magie","Bulle magique","Explosion","Faiblesse passagère","Flash aveuglant","Glue","Griffe du sorcier","Invisibilité","Projection","Sacrifice","Téléportation","Vision accrue","Vision lointaine","Voir le caché","Vue troublée"};
 
 	private Hashtable<Integer,Hashtable<Integer,Integer>> pourcentagesComp=new Hashtable<Integer,Hashtable<Integer,Integer>>();
 	private int [] pourcentagesSort=new int[NB_SORT+1];
@@ -137,6 +140,7 @@ public class Troll {
 	private int bmRM=0;
 	private int venin=0;
 	private int glue=0;
+	private int aTerre=0;
 	private int nbParade=0;
 	private int nbCA=0;
 
@@ -220,6 +224,12 @@ public class Troll {
 			vue=4;
 			setComp(COMP_CAMOUFLAGE,25,1);
 			pourcentagesSort[SORT_PROJECTILE_MAGIQUE]=25;
+		} else if(r==RACE_DARKLING)
+		{
+			race=r;
+			des_Regeneration=2;
+			setComp(COMP_BALAYAGE,25,1);
+			pourcentagesSort[SORT_SIPHON_AMES]=25;
 		}
 		/* jeter une exception */
 	}
@@ -387,6 +397,18 @@ public class Troll {
 		return nbPVRegen;
 	}
 
+	public void metATerre() {
+		aTerre++;
+	}
+	
+	public void releve() {
+		aTerre--;
+	}
+
+	public boolean isATerre() {
+		return aTerre > 0;
+	}
+	
 	private void removeBMs()
 	{
 		for(int i=0;i<listeBM.size();i++)
@@ -514,6 +536,8 @@ public class Troll {
 			r="Kastar";
 		else if(race==3)
 			r="Tomawak";
+		else if(race==4)
+			r="Darkling";
 		String rings = "";
 		for (Equipement fingersEqpt : doigts) {
 			rings += formatEquipePorte(fingersEqpt);
@@ -567,6 +591,8 @@ public class Troll {
 			r="Kastar";
 		else if(race==3)
 			r="Tomawak";
+		else if(race==4)
+			r="Darkling";
 		String returnstring="Nom : "+name+"\n"+
 				"Niveau "+niveau+"\n"+
 				"Race : "+r+"\n\n"+
@@ -651,6 +677,10 @@ public class Troll {
 		else
 			s+="0;";
 		if(invisible)
+			s+="1;";
+		else
+			s+="0;";
+		if(aTerre > 0)
 			s+="1";
 		else
 			s+="0";
@@ -675,7 +705,7 @@ public class Troll {
 	{
 		if(id<1 || id>NB_SORT)
 			return false;
-		if(id<=4 && id!=race+1)
+		if(id<=5 && id!=race+1)
 			return false;
 		if(pour>85)
 			return false;
@@ -728,7 +758,10 @@ public class Troll {
 		else
 			px+=somme(vue-3)*16;
 		px+=somme(des_Esquive-3)*16;
-		px+=somme(des_Regeneration-1)*30;
+		if(race==RACE_DARKLING)
+			px+=somme(des_Regeneration-2)*22;
+		else
+			px+=somme(des_Regeneration-1)*30;
 		px+=somme(des_ArN-1)*30;
 		switch(duree_tour)
 		{
@@ -1286,7 +1319,12 @@ public class Troll {
 		malus_des_attaque=0;
 		nbParade=0;
 		nbCA=0;
-		pa=6;
+		if(aTerre <= 0) {
+			pa=6;
+		}
+		else {
+			pa=5;
+		}
 		return s.substring(1);
 	}
 

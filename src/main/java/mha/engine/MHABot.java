@@ -170,9 +170,9 @@ public class MHABot {
 				int dx=Integer.parseInt(pos[1]);
 				int dy=Integer.parseInt(pos[2]);
 				int dn=Integer.parseInt(pos[3]);
+				Troll d=game.getTrollById(di);
 				if(dx==x && dy==y && dn==n && di!=t.getId() && pa>=4)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMAttaque()+t.getBMMAttaque())
 					{
 						int armure = Math.max(0, new DiceHelper().roll(t.getArN(),3)) +t.getArmurePhy()+t.getArmureMag();
@@ -190,7 +190,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && t.getReussiteComp(Troll.COMP_CDB,1)!=0 &&  pa>=4)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMAttaque()+t.getBMMAttaque())
 					{
 						int level = t.getLevelComp(Troll.COMP_CDB);
@@ -214,7 +213,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && t.getReussiteComp(Troll.COMP_AP,1)!=0 && pa>=4)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+t.getBMEsquive()+t.getBMMEsquive()<=(21*t.getAttaque())/4+t.getBMAttaque()+t.getBMMAttaque())
 					{
 						int level = t.getLevelComp(Troll.COMP_AP);
@@ -237,7 +235,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && t.getReussiteComp(Troll.COMP_FRENESIE,1)!=0 && pa>=6)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMAttaque()+t.getBMMAttaque())
 					{
 						int armure = Math.max(0, new DiceHelper().roll(t.getArN(), 3)) + t.getArmurePhy()
@@ -257,7 +254,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && pa>=2 && t.getReussiteComp(Troll.COMP_BOTTE_SECRETE,1)!=0 && !t.getCompReservee())
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/4+(t.getBMAttaque()+t.getBMMAttaque())/2)
 					{
 						int armure = Math.max(0, new DiceHelper().roll(t.getArN(), 3)) + t.getArmurePhy()
@@ -277,7 +273,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && t.getReussiteSort(Troll.SORT_RAFALE_PSYCHIQUE)!=0 && pa>=4 && !t.getSortReserve())
 				{
-					Troll d=game.getTrollById(di);
 					int deg=3*t.getDegat()+t.getBMMDegat()-t.getArmureMag();
 					deg=Math.max(1,(deg*t.getReussiteSort(Troll.SORT_RAFALE_PSYCHIQUE))/400);
 					if(maxDegats<deg)
@@ -289,7 +284,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && pa>=4 && t.getReussiteSort(Troll.SORT_VAMPIRISME)!=0 && !t.getSortReserve())
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getDegat())/3+t.getBMMAttaque())
 					{
 						int deg=3*t.getDegat()+t.getBMMDegat()-t.getArmureMag();
@@ -306,7 +300,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && pa>=4 && t.getReussiteSort(Troll.SORT_GDS)!=0)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMMAttaque())
 					{
 						int deg=t.getDegat()+t.getBMMDegat()+(1+t.getVue()/5)*(1+t.getPVTotaux()/30)*2-t.getArmureMag();
@@ -323,7 +316,6 @@ public class MHABot {
 				}
 				if(dx==x && dy==y && dn==n && di!=t.getId() && pa>=6 && t.getReussiteSort(Troll.SORT_EXPLOSION)!=0)
 				{
-					Troll d=game.getTrollById(di);
 					degExplo+=(((2+(t.getDegat()-3+(t.getPVTotaux()/10-3))))*t.getReussiteSort(Troll.SORT_EXPLOSION))/600;
 					if(maxDegats<degExplo)
 					{
@@ -343,7 +335,6 @@ public class MHABot {
 				}
 				if(t.getReussiteComp(Troll.COMP_CHARGER,1)!=0 && Math.max(Math.abs(dx-x),Math.abs(dy-y))<=porteeCharge && Math.max(Math.abs(dx-x),Math.abs(dy-y))>0 && dn==n && di!=t.getId() && pa>=4)
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMAttaque()+t.getBMMAttaque())
 					{
 						int armure = Math.max(0, new DiceHelper().roll(t.getArN(), 3)) + t.getArmurePhy()
@@ -372,7 +363,6 @@ public class MHABot {
 				}
 				if(t.getReussiteSort(Troll.SORT_PROJECTILE_MAGIQUE)!=0 && Math.max(Math.abs(dx-x),Math.abs(dy-y))<=portee && dn==n && di!=t.getId() && pa>=4 && !t.getSortReserve())
 				{
-					Troll d=game.getTrollById(di);
 					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getVue())/2+t.getBMMAttaque())
 					{
 						int deg=t.getVue()+t.getBMMDegat()-t.getArmureMag();
@@ -386,6 +376,34 @@ public class MHABot {
 							meilleureCible=d;
 						}
 					}
+				}
+				if(dx==x && dy==y && dn==n && di!=t.getId() && t.getReussiteSort(Troll.SORT_SIPHON_AMES)!=0 && pa>=4 && !t.getSortReserve())
+				{
+					if((7*d.getEsquive())/2+d.getBMEsquive()+d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMMAttaque())
+					{
+						int deg=t.getRegeneration()+t.getBMMDegat();
+						if((7*d.getEsquive())+2*d.getBMEsquive()+2*d.getBMMEsquive()<=(7*t.getAttaque())/2+t.getBMMAttaque())
+							deg+=t.getRegeneration()/2;
+						deg=Math.max(1,(deg*t.getReussiteSort(Troll.SORT_SIPHON_AMES))/400);
+						if(maxDegats<deg)
+						{
+							maxDegats=deg;
+							meilleureAttaque=12;
+							meilleureCible=d;
+						}
+					}
+				}
+				int stabilite = t.getAttaque();
+				int agilite = 2 * (d.getRegeneration() + d.getEsquive()) / 3;
+				//SI j'ai 6PA et que je n'attaque qu'à 4PA et que je suis darkling, j'ai une chance de renverser le troll adverse si ma déstabilisation est superieure a l'agilite de l'adversaire
+				if(dx==x && dy==y && dn==n && di!=t.getId() && pa==6 && !d.isATerre() && stabilite > agilite && t.getReussiteComp(Troll.COMP_BALAYAGE,1)!=0 )
+				{
+					if (t.getReussiteComp(Troll.COMP_BALAYAGE, 1) != 0 && diceHelper.roll(1, 160) < t.getReussiteComp(Troll.COMP_BALAYAGE, 1))
+						game.balayage(meilleureCible);
+					else if (t.getReussiteComp(Troll.COMP_BALAYAGE, 1) != 0
+							&& diceHelper.roll(1, 160) < t.getReussiteComp(Troll.COMP_BALAYAGE, 1))
+						game.balayage(meilleureCible);
+					pa=t.getPA();
 				}
 		}
 		catch(Exception e){e.printStackTrace();}
@@ -438,6 +456,7 @@ public class MHABot {
 		case 9: s=game.explosion();break;
 		case 10: s=game.charger(meilleureCible);break;
 		case 11: s=game.projectileMagique(meilleureCible);break;
+		case 12: s=game.siphonAmes(meilleureCible); break;
 		default : return;
 		}
 		dejaFrappe=true;
@@ -582,6 +601,12 @@ public class MHABot {
 			return;
 		}
 		if(firstTime && nbTrollsCase>1 && (pa>=4 || pa>=2 && t.getReussiteComp(Troll.COMP_BOTTE_SECRETE,1)!=0 && !t.getCompReservee()))
+		{
+			firstTime=false;
+			frappe();
+			return;
+		}
+		if(firstTime && nbTrollsCase>1 && (pa>=4 || pa>=2 && t.getReussiteComp(Troll.COMP_BALAYAGE,1)!=0 && !t.getCompReservee()))
 		{
 			firstTime=false;
 			frappe();

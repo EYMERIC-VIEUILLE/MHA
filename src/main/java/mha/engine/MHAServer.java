@@ -129,6 +129,8 @@ public class MHAServer extends Thread {
 					nomRace="kastar";
 				else if(race==Troll.RACE_TOMAWAK)
 					nomRace="tomawak";
+				else if(race==Troll.RACE_DARKLING)
+					nomRace="darkling";
 				if(caracTrolls.size()<=myIndex)
 					caracTrolls.setSize(myIndex+1);
 				caracTrolls.set(myIndex,inputLine+"\n");
@@ -867,6 +869,34 @@ public class MHAServer extends Thread {
 				return false;
 			}
 		}
+		else if(liste.length==1 && liste[0].toLowerCase().equals("releve"))
+		{
+			try
+			{
+				if(!isActiveTurn(myIndex))
+					return false;
+				t=game.getTrollBySocketId(myIndex);
+				if(t==null)
+				{
+					myChatArea.putString(myIndex,"Error: Unknown troll");
+					return false;
+				}
+				String s=game.releve(t);
+				if(s.substring(0,6).compareTo("Error:")!=0)
+				{
+					myChatArea.putString(myIndex,s);
+				}
+				else
+					myChatArea.putString(myIndex,s);
+				endAction();
+				return false;
+			}
+			catch(NumberFormatException e)
+			{
+				myChatArea.putString(myIndex,"Error: Bad data formating in releve instruction");
+				return false;
+			}
+		}
 		else if(liste.length==2 && liste[0].toLowerCase().equals("attaque"))
 		{
 			try
@@ -1206,6 +1236,7 @@ public class MHAServer extends Thread {
 				{"rafalePsychique","Troll"},
 				{"vampirisme","Troll"},
 				{"projectileMagique","Troll"},
+				{"siphonAmes","Troll"},
 				{"analyseAnatomique","Troll"},
 				{"armureEtheree"},
 				{"augmentationDeLAttaque"},
@@ -1233,6 +1264,7 @@ public class MHAServer extends Thread {
 				{"regenerationAccrue"},
 				{"accelerationDuMetabolisme","int"},
 				{"camouflage"},
+				{"balayage", "Troll"},
 				{"attaquePrecise","Troll"},
 				{"charger","Troll"},
 				{"construireUnPiege"},
