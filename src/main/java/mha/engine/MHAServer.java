@@ -1248,7 +1248,7 @@ public class MHAServer extends Thread {
 				{"faiblessePassagère","Troll"},
 				{"flashAveuglant"},
 				{"glue","Troll"},
-				{"griffeDuSorcier","Troll"},
+				{"griffeDuSorcier","Troll", "int"},
 				{"invisibilite"},
 				{"projection","Troll"},
 				{"sacrifice","Troll","int"},

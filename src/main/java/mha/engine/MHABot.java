@@ -452,7 +452,7 @@ public class MHABot {
 		case 5: s=game.botteSecrete(meilleureCible);break;
 		case 6: s=game.rafalePsychique(meilleureCible);break;
 		case 7: s=game.vampirisme(meilleureCible);break;
-		case 8: s=game.griffeDuSorcier(meilleureCible);break;
+		case 8: s=game.griffeDuSorcier(meilleureCible, 0);break;
 		case 9: s=game.explosion();break;
 		case 10: s=game.charger(meilleureCible);break;
 		case 11: s=game.projectileMagique(meilleureCible);break;

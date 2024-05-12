@@ -2204,7 +2204,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				mha.parser("sort "+(id+1));
 			}
 			//les cas AA et Projo et Glue sont différents
-			else if(MHAServer.listeSortileges[id].length==2 && MHAServer.listeSortileges[id][1].equals("Troll") && id!=3 && id!=4&& id!=14 && id!=12 && id!=23 && id!=24)
+			else if(MHAServer.listeSortileges[id].length==2 && MHAServer.listeSortileges[id][1].equals("Troll") && id!=3 && id!=4 && id!=14 && id!=12 && id != 15 && id!=23 && id!=24)
 				dialogTrollCible("Utiliser le sortilège "+s+" sur :","sort "+(id+1)+" ");
 			else if(MHAServer.listeSortileges[id].length==4)
 				dialogCase("Utiliser le sortilège "+s+" sur la case :","sort "+(id+1)+" ");
@@ -2212,8 +2212,10 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				dialogAllVisibleTroll("Utiliser le sortilège "+s+" sur :","sort "+(id+1)+" ");
 			else if(id==12 || id==23 || id==24)
 				dialogTrollCible("Utiliser le sortilège "+s+" sur :","sort "+(id+1)+" ",1,0);
-			else if(id==18)
-				dialogTrollSacro("sort 19 ");
+			else if(id==16)
+				dialogTrollGriffe("sort 17 ");
+			else if(id==19)
+				dialogTrollSacro("sort 20 ");
 			return;
 		}
 		return;
@@ -2493,6 +2495,77 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 			}
 		});
 		lowLevelDialog(dialog,label,closeButton,combo);
+	}
+
+	private void dialogTrollGriffe(String s)
+	{
+		final JDialog dialog = new JDialog(gui,"Action");
+		final JComboBox cibleCombo=new JComboBox();
+		cibleCombo.addItem("*** Choisissez une cible ***");
+		for(int i=1;i<tableVue.getModel().getRowCount();i++)
+		{
+			if(((Integer) tableVue.getModel().getValueAt(i,0))>1)
+				break;
+			if(((Integer) tableVue.getModel().getValueAt(i,7))==n)
+				cibleCombo.addItem(tableVue.getModel().getValueAt(i,2)+" ("+tableVue.getModel().getValueAt(i,1)+")");
+		}
+
+		final JComboBox typeVeninCombo=new JComboBox();
+		typeVeninCombo.addItem("*** Choisissez le type de venin ***");
+		typeVeninCombo.addItem("Venin virulent");
+		typeVeninCombo.addItem("Venin insidieux");
+		
+
+		JButton closeButton = new JButton("Action");
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cibleCombo.getSelectedIndex()==0 || cibleCombo.getSelectedIndex()==0)
+					return;
+				dialog.setVisible(false);
+				dialog.dispose();
+				popNext=true;
+				mha.parser(s+((String) cibleCombo.getSelectedItem()).substring(((String) cibleCombo.getSelectedItem()).lastIndexOf("(")+1,((String) cibleCombo.getSelectedItem()).lastIndexOf(")"))+" "+ (typeVeninCombo.getSelectedIndex() - 1));
+			}
+		});
+		JPanel closePanel = new JPanel();
+		JButton otherButton = new JButton("Annuler");
+		otherButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+		
+		cibleCombo.setPreferredSize(new Dimension(200, 25));
+		cibleCombo.setMaximumSize(new Dimension(200, 25));
+		cibleCombo.setMinimumSize(new Dimension(200, 25));
+		
+		typeVeninCombo.setPreferredSize(new Dimension(200, 25));
+		typeVeninCombo.setMaximumSize(new Dimension(200, 25));
+		typeVeninCombo.setMinimumSize(new Dimension(200, 25));
+
+		JPanel contentPane = new JPanel();
+		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.LINE_AXIS));
+		contentPane.add(Box.createHorizontalGlue());
+		contentPane.add(otherButton);
+		contentPane.add(Box.createHorizontalStrut(20));
+		contentPane.add(new JLabel("Griffer "));
+		contentPane.add(Box.createHorizontalStrut(5));
+		contentPane.add(cibleCombo);
+		contentPane.add(Box.createHorizontalStrut(5));
+		contentPane.add(new JLabel(" avec "));
+		contentPane.add(Box.createHorizontalStrut(5));
+		contentPane.add(typeVeninCombo);
+		contentPane.add(Box.createHorizontalStrut(20));
+		contentPane.add(closeButton);
+		contentPane.add(Box.createHorizontalGlue());
+		contentPane.setOpaque(true);
+		dialog.setContentPane(contentPane);
+		dialog.setSize(new Dimension(700, 100));
+		dialog.setLocationRelativeTo(gui);
+		dialog.setVisible(true);
 	}
 
 	private void dialogTrollCible(String s1, String s2,int dh,int dv)
