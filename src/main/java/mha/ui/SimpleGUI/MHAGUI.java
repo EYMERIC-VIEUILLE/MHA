@@ -2204,7 +2204,7 @@ public class MHAGUI extends JFrame implements MouseInputListener {
 				mha.parser("sort "+(id+1));
 			}
 			//les cas AA et Projo et Glue sont différents
-			else if(MHAServer.listeSortileges[id].length==2 && MHAServer.listeSortileges[id][1].equals("Troll") && id!=3 && id!=4 && id!=14 && id!=12 && id != 15 && id!=23 && id!=24)
+			else if(MHAServer.listeSortileges[id].length==2 && MHAServer.listeSortileges[id][1].equals("Troll") && id!=3 && id!=4 && id!=14 && id!=12 && id != 16 && id!=23 && id!=24)
 				dialogTrollCible("Utiliser le sortilège "+s+" sur :","sort "+(id+1)+" ");
 			else if(MHAServer.listeSortileges[id].length==4)
 				dialogCase("Utiliser le sortilège "+s+" sur la case :","sort "+(id+1)+" ");
