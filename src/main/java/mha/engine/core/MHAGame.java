@@ -1584,27 +1584,53 @@ public class MHAGame implements Serializable {
 		String s=sortilege(currentTroll, Troll.SORT_GDS,4);
 		if(s.indexOf("RÉUSSI")!=-1)
 		{
-			s += "\n" + lowLevelAttaque(" avec un sortilège", currentTroll , t , currentTroll.getAttaque(),  currentTroll.getBMMAttaque(), t.getEsquive() , t.getBMEsquive()+t.getBMMEsquive(), calculeSeuil(currentTroll.getMM(),t.getRM()) , currentTroll.getDegat()/2,(3*(currentTroll.getDegat()/2))/2,currentTroll.getBMMDegat(),0,t.getArmureMag(),100,true);
+			s += "\n" + lowLevelAttaque(" avec un sortilège", currentTroll , t , currentTroll.getAttaque(),  currentTroll.getBMMAttaque(), t.getEsquive() , t.getBMEsquive()+t.getBMMEsquive(), calculeSeuil(currentTroll.getMM(),t.getRM()) , 2 * currentTroll.getDegat() / 3, (int)((2 * currentTroll.getDegat() / 3) * 1.5),currentTroll.getBMMDegat(),0,t.getArmureMag(),100,true);
 			if(s.indexOf("TOUCHÉ")!=-1)
 			{
+				String veninMsg = "";
+				//Venin virulent
+				int veninVirulent = (int) (1.5 * (1 + (currentTroll.getPVTotaux() / 10 + currentTroll.getRegeneration()) / 3));
+				int jetVeninVirulent = diceHelper.roll(veninVirulent, 3);
 				BM bm;
 				if(s.indexOf("EFFET REDUIT")==-1) {
-					bm = new BM("Griffe du Sorcier", 0, 0, 0, 0, 0, 0,
-							diceHelper.roll(1 + currentTroll.getPVTotaux() / 30, 3), 0, 0, 0, 0, false,
-							1 + currentTroll.getVue() / 5);
+					bm = new BM("Venin virulent", 0, 0, 0, 0, 0, 0,
+							jetVeninVirulent, 0, 0, 0, 0, false,
+							1 + currentTroll.getVue() / 10);
 				}
 				else {
-					bm = new BM("Griffe du Sorcier", 0, 0, 0, 0, 0, 0,
-							diceHelper.roll(1 + currentTroll.getPVTotaux() / 30, 3) / 2, 0, 0, 0, 0, false,
-							(1 + currentTroll.getVue() / 5) / 2);
+					bm = new BM("Venin virulent", 0, 0, 0, 0, 0, 0,
+							jetVeninVirulent / 2, 0, 0, 0, 0, false,
+							(1 + currentTroll.getVue() / 10) / 2);
 				}
-				BM realBM = t.addBM(bm);
+				BM veninVirulentBM = t.addBM(bm);
+
+				veninMsg += "\nCette attaque provoque un malus de poison virulent de  " + Math.abs(veninVirulentBM.getVenin())
+				+ " pour les " + veninVirulentBM.getDuree() + " prochains tour(s)";
+				
+				//Venin insidieux
+				int veninInsidieux = (int) (1 + (currentTroll.getPVTotaux() / 10 + currentTroll.getRegeneration()) / 3);
+				int jetVeninInsidieux = diceHelper.roll(veninInsidieux, 3);
+				if(s.indexOf("EFFET REDUIT")==-1) {
+					bm = new BM("Venin insidieux", 0, 0, 0, 0, 0, 0,
+							jetVeninInsidieux, 0, 0, 0, 0, false,
+							2 + currentTroll.getVue() / 5);
+				}
+				else {
+					bm = new BM("Venin insidieux", 0, 0, 0, 0, 0, 0,
+							jetVeninInsidieux / 2, 0, 0, 0, 0, false,
+							(2 + currentTroll.getVue() / 5) / 2);
+				}
+				
+				BM veninInsidieuxBM = t.addBM(bm);
+				
+				veninMsg += "\nCette attaque provoque un malus de poison insidieux de  " + Math.abs(veninInsidieuxBM.getVenin())
+				+ " pour les " + veninInsidieuxBM.getDuree() + " prochains tour(s)";
+
 				t.getInbox()
 				.add(t.getInbox().remove(t.getInbox().size() - 1)
-						+ "\nCette attaque provoque un malus de Poison de  " + Math.abs(realBM.getVenin())
-						+ " pour vos " + realBM.getDuree() + " prochains tour(s)");
-				return s += "\nCette attaque provoque un malus de Poison de  " + Math.abs(realBM.getVenin())
-				+ " pour ses " + realBM.getDuree() + " prochains tour(s)";
+						+ veninMsg);
+
+				return s += veninMsg;
 			}
 		}
 		return s;
