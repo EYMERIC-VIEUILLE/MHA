@@ -13,47 +13,50 @@ addtroll id nom race : créé un troll de la race "race" :
       1 = durakuir
       2 = kastar
       3 = tomawak
+      4 = darkling
 carac Niv Att Esq Deg Reg PV Vue Durée_DLA(en minutes) MM_pure RM_pure : donne les caracs de son troll
 addcomp num pourcentage : indique que l'on a la comp n° num à pourcentage %
       1  = BS
       2  = RA
       3  = AM
       4  = Camou
-      5  = AP
-      6  = Charger
-      7  = piège
-      8  = contre attaque
-      9  = CdB
-      10 = DE
-      11 = Frénésie
-      12 = LdP (non fonctionnel)
-      13 = Parer
-      14 = Pistage (je sais pas s'il marche :) )
+      5  = Balayage
+      6  = AP
+      7  = Charger
+      8  = piège
+      9  = contre attaque
+      10  = CdB
+      11 = DE
+      12 = Frénésie
+      13 = LdP (non fonctionnel)
+      14 = Parer
+      15 = Pistage (je sais pas s'il marche :) )
 addsort num pourcentage : indique que l'on a le sort n° num à pourcentage %
       1  = Hypno
       2  = RP
       3  = Vampirisme
       4  = Projo
-      5  = AA
-      6  = AE
-      7  = AdA
-      8  = AdE
-      9  = ADD
-      10  = BaM
-      11 = BuM
-      12 = Explo
-      13 = FP
-      14 = FA
-      15 = Glue
-      16 = GdS
-      17 = Invisibilité
-      18 = Projection
-      19 = Sacro
-      20 = TP
-      21 = VA
-      22 = VL
-      23 = VLC
-      24 = VT
+      5  = Siphon des âmes
+      6  = AA
+      7  = AE
+      8  = AdA
+      9  = AdE
+      10  = ADD
+      11  = BaM
+      12 = BuM
+      13 = Explo
+      14 = FP
+      15 = FA
+      16 = Glue
+      17 = GdS
+      18 = Invisibilité
+      19 = Projection
+      20 = Sacro
+      21 = TP
+      22 = VA
+      23 = VL
+      24 = VLC
+      25 = VT
 addequip id type Att Esq Deg DLA reg ArN pv vue armure_physique armure_magique effet_de_zone bidouille poids(en minute) mm rm est_équipé nom
      Ajoute un équipement. est_équipé vaut 1 si l'équipement est équipé. effet_de_zone vaut 1 pour les potions à effet de zone et bidouille ne sert à rien pour l'instant (à mettre à 0)  Les différentes valeurs de type
       ARMURE=0;
@@ -110,6 +113,7 @@ getlieux : obtenir les lieux dans sa vue
 getvue : comme précédemment
 getlieux : obtenir les lieux dans sa vue
 getinfoslieu : obtenir des infos sur le lieu sur lequel on se trouve
+releve : releve le troll
 deplace x y n : se déplacer de x cases en X, y cases en y, n cases en N. Un déplacement normal quoi
 attaque xxx : permet d'attaquer normalement le troll xxx (ne marche que s'il l'on est sur sa case, 
     et qu'il est visible
